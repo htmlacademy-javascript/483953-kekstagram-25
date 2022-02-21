@@ -10,7 +10,8 @@ function getRandomNumber(firstNumber, secondNumber) {
   if (firstNumber < 0) {
     firstNumber = 0;
   }
-  if (secondNumber <= firstNumber) {// eslint-disable-next-line
+  if (secondNumber <= firstNumber) {
+    // eslint-disable-next-line
     return console.log('Указаны некорректные числа');
   }
   return getRandomIntInclusive(firstNumber, secondNumber);
