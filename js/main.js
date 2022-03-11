@@ -23,7 +23,7 @@ function compareStringLenth(string, maxLength) {
   return string.length < maxLength;
 }
 
-const altText = [
+const ALT_TEXTS = [
   'cat',
   'cat & food',
   'cat & dog',
@@ -51,7 +51,7 @@ const altText = [
   'gray cat & toy'
 ];
 
-const message = [
+const MESSAGES = [
   'Всё отлично!',
   'В целом всё неплохо. Но не всё.',
   'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
@@ -60,7 +60,7 @@ const message = [
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
 ];
 
-const nickname = [
+const NICK_NAMES = [
   'Пол',
   'Полина',
   'Олег',
@@ -73,44 +73,68 @@ const nickname = [
   'Флора'
 ];
 
-const createMessage = function (){
+const MAX_PHRASES = 2;
+
+const ID_GENERATING_SPAN = 10;
+
+const MAX_AVATAR = 6;
+
+const MIN_LIKES = 15;
+
+const MAX_LIKES = 200;
+
+const PHOTOS_COUNT = 25;
+
+const COMMENTS_COUNT = 5;
+
+function createMessage (){
   let text = '';
-  const k = getRandomNumber(1, 2);
-  for (let i = 1; i <= k; i++){
-    text += ' ' + message[getRandomNumber(0, message.length - 1)];
+  const k = getRandomNumber(1, MAX_PHRASES);
+  for (let i = 0; i < k; i++){
+    text += ' ' + MESSAGES[getRandomNumber(0, MESSAGES.length - 1)];
   }
   return text.slice(1);
-};
+}
 
 let idComment = 0;
 
-const makeComment = function (){
-  idComment = idComment + getRandomNumber(1, 10);
+function makeComment (){
+  idComment = idComment + getRandomNumber(1, ID_GENERATING_SPAN);
   const comment = {
     id: idComment,
-    avatar: `img/avatar-${getRandomNumber(1, 6)}.svg`,
+    avatar: `img/avatar-${getRandomNumber(1, MAX_AVATAR)}.svg`,
     message: createMessage(),
-    name: nickname[getRandomNumber(0, nickname.length - 1)]
+    name: NICK_NAMES[getRandomNumber(0, NICK_NAMES.length - 1)]
   };
   return comment;
-};
+}
 
-const createDescription = function (id){
+function makeCommentsArray (){
+  const COMMENTS = [];
+  for (let i = 0; i < COMMENTS_COUNT; i++){
+    COMMENTS[i] = makeComment(i + 1);
+  }
+  return COMMENTS;
+}
+
+function createDescription (id){
   const url = `photos/${id}.jpg`;
   const description = {
     id: id,
     url: url,
-    description: altText[id - 1],
-    likes: getRandomNumber(15, 200),
-    comments: makeComment()
+    description: ALT_TEXTS[id - 1],
+    likes: getRandomNumber(MIN_LIKES, MAX_LIKES),
+    comments: makeCommentsArray()
   };
   return description;
-};
+}
 
-const makePhoto = function (){
-  const photos = [];
-  for (let i = 0; i < 25; i++){
-    photos[i] = createDescription(i + 1);
+function makePhoto (){
+  const PHOTOS = [];
+  for (let i = 0; i < PHOTOS_COUNT; i++){
+    PHOTOS[i] = createDescription(i + 1);
   }
-  return photos;
-};
+  return PHOTOS;
+}
+
+console.log(makePhoto());
