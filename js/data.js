@@ -108,7 +108,7 @@ function createDescription (id){
   return description;
 }
 
-function makePhoto (){
+function makePhotos (){
   const photos = [];
   for (let i = 0; i < PHOTOS_COUNT; i++){
     photos.push(createDescription(i + 1));
@@ -116,4 +116,4 @@ function makePhoto (){
   return photos;
 }
 
-export {makePhoto};
+export {makePhotos};
