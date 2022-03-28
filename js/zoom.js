@@ -26,17 +26,7 @@ function showBigPhoto (evt) {
 
   // Список комментариев под фотографией: комментарии должны вставляться в блок .social__comments. Разметка каждого комментария должна выглядеть так:
 
-  // <li class="social__comment">
-  //     <img
-  //         class="social__picture"
-  //         src="{{аватар}}"
-  //         alt="{{имя комментатора}}"
-  //         width="35" height="35">
-  //     <p class="social__text">{{текст комментария}}</p>
-  // </li>
-  const photoCommentsList = document.querySelector('.social__comments');
-
-
+  setComments(photos[i]);
 
   // Описание фотографии description вставьте строкой в блок .social__caption.
   const photoDescription = document.querySelector('.social__caption');
@@ -52,16 +42,32 @@ function showBigPhoto (evt) {
 
 pictureList.addEventListener('click', showBigPhoto);
 
+const commentsContainer = document.querySelector('.social__comments');
+
+  // <li class="social__comment">
+  //     <img
+  //         class="social__picture"
+  //         src="{{аватар}}"
+  //         alt="{{имя комментатора}}"
+  //         width="35" height="35">
+  //     <p class="social__text">{{текст комментария}}</p>
+  // </li>
+
 function setComments (photo) {
   const fragment = document.createDocumentFragment();
+  const photoCommentsItem = document.querySelector('.social__comment');
 
   for (let i = 0; i < photo.comments.length; i++){
-    const photoComments = document.querySelector('.social__comment img');
-    photoComments.src = photo.comments[i].avatar;
-    photoComments.alt = photo.comments[i].name;
-    const photoCommentsText = document.querySelector('.social__comment p');
-    photoCommentsText.textContent = photo.comments[i].message;
+    const chunk = photoCommentsItem.cloneNode(true);
+    const photoComment = chunk.querySelector('.social__comment img');
+    photoComment.src = photo.comments[i].avatar;
+    photoComment.alt = photo.comments[i].name;
+    const photoCommentText = chunk.querySelector('.social__comment p');
+    photoCommentText.textContent = photo.comments[i].message;
+    fragment.appendChild(chunk);
   }
+  commentsContainer.innerHTML = ''; // сломается, если будет 0 комментариев!
+  commentsContainer.appendChild(fragment);
 }
 
 // Напишите код для закрытия окна по нажатию клавиши Esc и клике по иконке закрытия.
@@ -79,4 +85,3 @@ document.addEventListener('keydown', (evt) => {
     document.querySelector('body').classList.remove('modal-open');
   }
 });
-// Подключите модуль в проект.
