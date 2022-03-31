@@ -15,13 +15,23 @@ const fragment = document.createDocumentFragment();
 const photoCommentsItem = document.querySelector('.social__comment');
 const closeBtn = document.querySelector('.big-picture__cancel');
 
+const onPopupEscKeydown = (evt) => {
+  if (evt.key === 'Escape') {
+    evt.preventDefault();
+    photoBig.classList.add('hidden');
+    document.body.classList.remove('modal-open');
+    document.removeEventListener('keydown', onPopupEscKeydown);
+  }
+};
+
 function showBigPhoto (evt) {
   if (evt.target.matches('img')){
     photoBig.classList.remove('hidden');
+    document.addEventListener('keydown', onPopupEscKeydown);
   }
 
-  const re = /([0-9]+)\.jpg/;
-  const i = evt.target.src.match(re)[1] - 1;
+  const RE = /([0-9]+)\.jpg/;
+  const i = evt.target.src.match(RE)[1] - 1;
 
   // Адрес изображения url подставьте как src изображения внутри блока .big-picture__img.
   photoImg.src = photos[i].url;
@@ -78,14 +88,3 @@ closeBtn.addEventListener('click', () => {
   photoBig.classList.add('hidden');
   document.body.classList.remove('modal-open');
 });
-
-const onPopupEscKeydown = (evt) => {
-  if (evt.key === 'Escape') {
-    evt.preventDefault();
-    photoBig.classList.add('hidden');
-    document.body.classList.remove('modal-open');
-    document.removeEventListener('keydown', onPopupEscKeydown);
-  }
-};
-
-document.addEventListener('keydown', onPopupEscKeydown);
