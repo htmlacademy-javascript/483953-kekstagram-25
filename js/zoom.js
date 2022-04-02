@@ -28,27 +28,26 @@ function showBigPhoto (evt) {
   if (evt.target.matches('img')){
     photoBig.classList.remove('hidden');
     document.addEventListener('keydown', onPopupEscKeydown);
+
+    const RE = /([0-9]+)\.jpg/;
+    const i = evt.target.src.match(RE)[1] - 1;
+
+    // Адрес изображения url подставьте как src изображения внутри блока .big-picture__img.
+    photoImg.src = photos[i].url;
+
+    // Количество лайков likes подставьте как текстовое содержание элемента .likes-count.
+    photoLikes.textContent = photos[i].likes;
+
+    // Количество комментариев comments подставьте как текстовое содержание элемента .comments-count.
+    photoCommentsCount.textContent = photos[i].comments.length;
+
+    // Список комментариев под фотографией: комментарии должны вставляться в блок .social__comments. Разметка каждого комментария должна выглядеть так:
+
+    setComments(photos[i]);
+
+    // Описание фотографии description вставьте строкой в блок .social__caption.
+    photoDescription.textContent = photos[i].description;
   }
-
-  const RE = /([0-9]+)\.jpg/;
-  const i = evt.target.src.match(RE)[1] - 1;
-
-  // Адрес изображения url подставьте как src изображения внутри блока .big-picture__img.
-  photoImg.src = photos[i].url;
-
-  // Количество лайков likes подставьте как текстовое содержание элемента .likes-count.
-  photoLikes.textContent = photos[i].likes;
-
-  // Количество комментариев comments подставьте как текстовое содержание элемента .comments-count.
-  photoCommentsCount.textContent = photos[i].comments.length;
-
-  // Список комментариев под фотографией: комментарии должны вставляться в блок .social__comments. Разметка каждого комментария должна выглядеть так:
-
-  setComments(photos[i]);
-
-  // Описание фотографии description вставьте строкой в блок .social__caption.
-  photoDescription.textContent = photos[i].description;
-
   // После открытия окна спрячьте блоки счётчика комментариев .social__comment-count и загрузки новых комментариев .comments-loader, добавив им класс hidden, с ними мы разберёмся позже, в другом домашнем задании.
   photoCommentsCountContainer.classList.add('hidden');
   photoCommentsLoader.classList.add('hidden');
