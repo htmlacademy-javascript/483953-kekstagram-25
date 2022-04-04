@@ -1403,3 +1403,12 @@ main {
 .hidden {
   display: none;
 }
+
+/* классы для ошибок валидации */
+
+.text__hashtags-error {
+  color: #ff0000;
+  text-transform: initial;
+  background-color: #ffffff;
+  border-radius: 5px;
+}
