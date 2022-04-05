@@ -12,27 +12,29 @@ const MAX_LENGTH = 140;
 const RE = /^#[a-zA-Zа-яА-ЯёЁ0-9]{1,19}$/;
 const hashtagsText = document.querySelector('.text__hashtags');
 const commentText = uploadForm.querySelector('.text__description');
+const MAX_HASHTAGS_COUNT = 5;
 
 
-const onPopupEscKeydown = (evt) => {
-  if (evt.key === 'Escape') {
-    evt.preventDefault();
-    uploadOverlay.classList.add('hidden');
-    document.body.classList.remove('modal-open');
-    document.removeEventListener('keydown', onPopupEscKeydown);
-  }
-};
+function closePopup() {
+  uploadOverlay.classList.add('hidden');
+  document.body.classList.remove('modal-open');
+  uploadForm.reset();
+}
 
 upload.addEventListener('change', () => {
   uploadOverlay.classList.remove('hidden');
   uploadForm.reset();
-  document.addEventListener('keydown', onPopupEscKeydown);
 });
 
 closeBtn.addEventListener('click', () => {
-  uploadOverlay.classList.add('hidden');
-  document.body.classList.remove('modal-open');
-  uploadForm.reset();
+  closePopup();
+});
+
+upload.addEventListener('keydown', (evt) => {
+  if (evt.key === 'Escape'){
+    evt.preventDefault();
+    closePopup();
+  }
 });
 
 // Хэш-теги:
@@ -57,42 +59,26 @@ function isHashtagOk () {
   return true;
 }
 
-
-// Валидация полей
-
 const pristine = new Pristine(uploadForm,{
-  classTo: 'img-upload__text',
+  classTo: 'img-upload__form',
   errorTextParent: 'img-upload__text',
   errorTextClass: 'text__hashtags-error',
 });
 
-
 function checkHashtagCount () {
   const hashtags = hashtagsText.value.split(' ');
-  if (hashtags.length > 5) {
-    return false;
-  } else {
-    return true;
-  }
+  return (hashtags.length < MAX_HASHTAGS_COUNT);
 }
 
 function checkHashtagUnique () {
   const hashtags = hashtagsText.value.split(' ');
   const hashtagsUnique = new Set(hashtags);
-  if (!(hashtags.length === hashtagsUnique.size)) {
-    return false;
-  } else {
-    return true;
-  }
+  return (hashtags.length === hashtagsUnique.size);
 }
 
 function checkComment() {
   const commentLength = uploadForm.querySelector('.text__description').value.length;
-  if (commentLength <= MAX_LENGTH) {
-    return true;
-  } else {
-    return false;
-  }
+  return (commentLength <= MAX_LENGTH);
 }
 
 hashtagsText.addEventListener('keydown', (evt) => {
@@ -136,10 +122,10 @@ uploadForm.addEventListener('submit', (evt) => {
   pristine.validate();
 });
 
-hashtagsText.addEventListener('input', () => {
-  uploadSubmitButton.disabled = !pristine.validate();
-});
+// hashtagsText.addEventListener('input', () => {
+//   uploadSubmitButton.disabled = !pristine.validate();
+// });
 
-commentText.addEventListener('input', () => {
-  uploadSubmitButton.disabled = !pristine.validate();
-});
+// commentText.addEventListener('input', () => {
+//   uploadSubmitButton.disabled = !pristine.validate();
+// });
