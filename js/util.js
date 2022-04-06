@@ -19,9 +19,9 @@ function getRandomNumber(firstNumber, secondNumber) {
 
 // имя_функции(проверяемая_строка, максимальная_длина); // Результат: true, если строка проходит по длине, и false — если не проходит
 
-function compareStringLenth(string, maxLength) {
+function compareStringLength(string, maxLength) {
   return string.length < maxLength;
 }
 
 export {getRandomNumber};
-export {compareStringLenth};
+export {compareStringLength};
