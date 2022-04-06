@@ -7,7 +7,6 @@ const upload = document.querySelector('#upload-file');
 const uploadOverlay = document.querySelector('.img-upload__overlay');
 const closeBtn = document.querySelector('#upload-cancel');
 const uploadForm = document.querySelector('#upload-select-image');
-const uploadSubmitButton = uploadForm.querySelector('#upload-submit');
 const MAX_LENGTH = 140;
 const RE = /^#[a-zA-Zа-яА-ЯёЁ0-9]{1,19}$/;
 const hashtagsText = document.querySelector('.text__hashtags');
