@@ -3,6 +3,9 @@
 // Если форма заполнена верно, то после отправки покажется страница сервера (по адресу из атрибута action тега form) с успешно отправленными данными. Если же форма пропустила какие-то некорректные значения, то будет показана страница с допущенными ошибками. В идеале у пользователя не должно быть сценария, при котором он может отправить некорректную форму.
 
 // После выбора изображения (изменения значения поля #upload-file), показывается форма редактирования изображения. У элемента .img-upload__overlay удаляется класс hidden, а body задаётся класс modal-open.
+import {setupPhoto} from './scale.js';
+import {currentStep} from './scale.js';
+
 const upload = document.querySelector('#upload-file');
 const uploadOverlay = document.querySelector('.img-upload__overlay');
 const closeBtn = document.querySelector('#upload-cancel');
@@ -20,9 +23,14 @@ function closePopup() {
   uploadForm.reset();
 }
 
-upload.addEventListener('change', () => {
+function openForm (){
   uploadOverlay.classList.remove('hidden');
   uploadForm.reset();
+  setupPhoto(currentStep);
+}
+
+upload.addEventListener('change', () => {
+  openForm();
 });
 
 closeBtn.addEventListener('click', () => {

@@ -16,34 +16,27 @@ const photo = document.querySelector('.img-upload__preview img');
 const SCALE_STEP = 25;
 const SCALE_MIN = 25;
 const SCALE_MAX = 100;
-let currentStep = 50;
+let currentStep = 100;
 
-// const onScaleClick = (evt) => {
-//   const target = evt.target;
-//   if (target === scaleSmaller && currentStep > SCALE_MIN) {
-//     currentStep -= SCALE_STEP;
-//   }
-//   if (target === scaleBigger && currentStep < SCALE_MAX) {
-//     currentStep += SCALE_STEP;
-//   }
-//   scaleInput.value = `${currentStep}%`;
-//   photo.style.transform = `scale(${currentStep * 0.01})`;
-// };
+function setupPhoto (currentStep) {
+  scaleInput.value = `${currentStep}%`;
+  photo.style = `transform: scale(${currentStep * 0.01})`;
+}
 
 scaleBigger.addEventListener('click', () => {
   if (currentStep < SCALE_MAX) {
     currentStep += SCALE_STEP;
-    scaleInput.value = `${currentStep}%`;
-    photo.style = `transform: scale(${currentStep * 0.01})`;
+    setupPhoto(currentStep);
   }
 });
 
 scaleSmaller.addEventListener('click', () => {
   if (currentStep > SCALE_MIN) {
     currentStep -= SCALE_STEP;
-    scaleInput.value = `${currentStep}%`;
-    photo.style = `transform: scale(${currentStep * 0.01})`;
+    setupPhoto(currentStep);
   }
 });
 
-// export {scaleFieldset, onScaleClick};
+export {scaleFieldset};
+export {setupPhoto};
+export {currentStep};
