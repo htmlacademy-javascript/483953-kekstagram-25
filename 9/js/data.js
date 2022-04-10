@@ -64,7 +64,7 @@ const MAX_LIKES = 200;
 
 const PHOTOS_COUNT = 25;
 
-const COMMENTS_COUNT = 15;
+const COMMENTS_COUNT = 11;
 
 function createMessage (){
   let text = '';
