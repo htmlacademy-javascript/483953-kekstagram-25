@@ -14,90 +14,6 @@
 // Для эффекта «Оригинал» CSS-стили filter удаляются.
 // При выборе эффекта «Оригинал» слайдер скрывается.
 // При переключении эффектов, уровень насыщенности сбрасывается до начального значения (100%): слайдер, CSS-стиль изображения и значение поля должны обновляться.
-const CHROME_PARAMETERS = {
-  range: {
-    min: 0,
-    max: 1,
-  },
-  start: 1,
-  step: 0.1,
-  format: {
-    to: function (value) {
-      return value;
-    },
-    from: function (value) {
-      return value;
-    }
-  }
-};
-
-const SEPIA_PARAMETERS = {
-  range: {
-    min: 0,
-    max: 1,
-  },
-  start: 1,
-  step: 0.1,
-  format: {
-    to: function (value) {
-      return value;
-    },
-    from: function (value) {
-      return value;
-    }
-  }
-};
-
-const MARVIN_PARAMETERS = {
-  range: {
-    min: 0,
-    max: 100,
-  },
-  start: 100,
-  step: 1,
-  format: {
-    to: function (value) {
-      return `${value}%`;
-    },
-    from: function (value) {
-      return value;
-    }
-  }
-};
-
-const PHOBOS_PARAMETERS = {
-  range: {
-    min: 0,
-    max: 3,
-  },
-  start: 3,
-  step: 0.1,
-  format: {
-    to: function (value) {
-      return `${value.toFixed(1)}px`;
-    },
-    from: function (value) {
-      return value;
-    }
-  }
-};
-
-const HEAT_PARAMETERS = {
-  range: {
-    min: 1,
-    max: 3,
-  },
-  start: 3,
-  step: 0.1,
-  format: {
-    to: function (value) {
-      return value;
-    },
-    from: function (value) {
-      return value;
-    }
-  }
-};
 
 const effectLevel = document.querySelector('.img-upload__effect-level');
 const effectList = document.querySelector('.effects__list');
@@ -119,24 +35,99 @@ noUiSlider.create(effectSlider, {
 const filterParameters = {
   'chrome': {
     'filterName': 'grayscale',
-    'filterParameter': CHROME_PARAMETERS,
+    'filterParameter': {
+      range: {
+        min: 0,
+        max: 1,
+      },
+      start: 1,
+      step: 0.1,
+      format: {
+        to: function (value) {
+          return value;
+        },
+        from: function (value) {
+          return value;
+        }
+      }
+    },
   },
   'sepia': {
     'filterName': 'sepia',
-    'filterParameter': SEPIA_PARAMETERS,
+    'filterParameter': {
+      range: {
+        min: 0,
+        max: 1,
+      },
+      start: 1,
+      step: 0.1,
+      format: {
+        to: function (value) {
+          return value;
+        },
+        from: function (value) {
+          return value;
+        }
+      }
+    },
   },
 
   'marvin': {
     'filterName': 'invert',
-    'filterParameter': MARVIN_PARAMETERS,
+    'filterParameter': {
+      range: {
+        min: 0,
+        max: 100,
+      },
+      start: 100,
+      step: 1,
+      format: {
+        to: function (value) {
+          return `${value}%`;
+        },
+        from: function (value) {
+          return value;
+        }
+      }
+    },
   },
   'phobos': {
     'filterName': 'blur',
-    'filterParameter': PHOBOS_PARAMETERS,
+    'filterParameter': {
+      range: {
+        min: 0,
+        max: 3,
+      },
+      start: 3,
+      step: 0.1,
+      format: {
+        to: function (value) {
+          return `${value.toFixed(1)}px`;
+        },
+        from: function (value) {
+          return value;
+        }
+      }
+    },
   },
   'heat': {
     'filterName': 'brightness',
-    'filterParameter': HEAT_PARAMETERS,
+    'filterParameter': {
+      range: {
+        min: 1,
+        max: 3,
+      },
+      start: 3,
+      step: 0.1,
+      format: {
+        to: function (value) {
+          return value;
+        },
+        from: function (value) {
+          return value;
+        }
+      }
+    },
   },
 };
 

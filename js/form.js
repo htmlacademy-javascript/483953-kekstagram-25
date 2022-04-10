@@ -4,7 +4,6 @@
 
 // После выбора изображения (изменения значения поля #upload-file), показывается форма редактирования изображения. У элемента .img-upload__overlay удаляется класс hidden, а body задаётся класс modal-open.
 import {setupPhoto} from './scale.js';
-import {currentStep} from './scale.js';
 import {getDefaultEffects} from './filters.js';
 
 const upload = document.querySelector('#upload-file');
@@ -27,7 +26,7 @@ function closePopup() {
 function openForm (){
   uploadOverlay.classList.remove('hidden');
   uploadForm.reset();
-  setupPhoto(currentStep);
+  setupPhoto();
   getDefaultEffects();
 }
 
