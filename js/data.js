@@ -70,7 +70,7 @@ function createMessage (){
   let text = '';
   const k = getRandomNumber(1, MAX_PHRASES);
   for (let i = 0; i < k; i++){
-    text += ' ' + MESSAGES[getRandomNumber(0, MESSAGES.length - 1)];
+    text += ` ${  MESSAGES[getRandomNumber(0, MESSAGES.length - 1)]}`;
   }
   return text.slice(1);
 }
