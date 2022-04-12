@@ -125,15 +125,21 @@ pristine.addValidator(
   'Максимум 140 символов'
 );
 
-uploadForm.addEventListener('submit', (evt) => {
-  evt.preventDefault();
-  pristine.validate();
-});
+const setUserFormSubmit = (onSuccess) => {
+  uploadForm.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+    const isValid = pristine.validate();
+    if (isValid) {
+      const formData = new FormData(evt.target);
+      fetch(
+        'https://25.javascript.pages.academy/kekstagram',
+        {
+          method: 'POST',
+          body: formData,
+        },
+      ).then(() => onSuccess());
+    }
+  });
+};
 
-// hashtagsText.addEventListener('input', () => {
-//   uploadSubmitButton.disabled = !pristine.validate();
-// });
-
-// commentText.addEventListener('input', () => {
-//   uploadSubmitButton.disabled = !pristine.validate();
-// });
+export {setUserFormSubmit};

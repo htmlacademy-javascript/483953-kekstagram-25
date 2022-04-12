@@ -1,4 +1,4 @@
-import {photos} from './minis.js';
+import {photos} from './fetch.js';
 
 // Для отображения окна нужно удалять класс hidden у элемента .big-picture и каждый раз заполнять его данными о конкретной фотографии:
 
@@ -19,14 +19,24 @@ let elem;
 const photoCommentsItemCounter = document.querySelector('.social__comment-count');
 const socialCommentsBtn = document.querySelector('.social__comments-loader');
 
+// Напишите код для закрытия окна по нажатию клавиши Esc и клике по иконке закрытия.
+
+closeBtn.addEventListener('click', () => {
+  closeBigPhoto();
+});
+
 const onPopupEscKeydown = (evt) => {
   if (evt.key === 'Escape') {
     evt.preventDefault();
-    photoBig.classList.add('hidden');
-    document.body.classList.remove('modal-open');
-    document.removeEventListener('keydown', onPopupEscKeydown);
+    closeBigPhoto();
   }
 };
+
+function closeBigPhoto () {
+  photoBig.classList.add('hidden');
+  document.body.classList.remove('modal-open');
+  document.removeEventListener('keydown', onPopupEscKeydown);
+}
 
 function showBigPhoto (evt) {
   if (evt.target.matches('img')){
@@ -57,6 +67,8 @@ function showBigPhoto (evt) {
 
   // После открытия окна добавьте тегу <body> класс modal-open, чтобы контейнер с фотографиями позади не прокручивался при скролле. При закрытии окна не забудьте удалить этот класс.
   document.body.classList.add('modal-open');
+
+  socialCommentsBtn.classList.remove('hidden');
 }
 
 pictureList.addEventListener('click', showBigPhoto);
@@ -95,15 +107,6 @@ photoCommentsLoader.addEventListener ('click', () => {
   setComments(photos[elem], index);
 });
 
-// Напишите код для закрытия окна по нажатию клавиши Esc и клике по иконке закрытия.
-
-closeBtn.addEventListener('click', () => {
-  photoBig.classList.add('hidden');
-  document.body.classList.remove('modal-open');
-});
-
 // нужно обновлять количество показанных комментариев в блоке «5 комментариев из 17» и нужно скрывать кнопку Загрузить ещё, если больше грузить нечего
 
-// 5 из
-// let photoCommentsItemCounter = document.querySelector('.social__comment-count');
-// photoCommentsItemCounter = '${photoCommentsItemCounter + NEXT_COMMENTS_COUNT} из ';
+export {closeBigPhoto, showBigPhoto};
