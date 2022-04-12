@@ -5,6 +5,7 @@
 // После выбора изображения (изменения значения поля #upload-file), показывается форма редактирования изображения. У элемента .img-upload__overlay удаляется класс hidden, а body задаётся класс modal-open.
 import {setupPhoto} from './scale.js';
 import {getDefaultEffects} from './filters.js';
+import {showAlert} from './util.js';
 
 const upload = document.querySelector('#upload-file');
 const uploadOverlay = document.querySelector('.img-upload__overlay');
@@ -125,15 +126,39 @@ pristine.addValidator(
   'Максимум 140 символов'
 );
 
-uploadForm.addEventListener('submit', (evt) => {
-  evt.preventDefault();
-  pristine.validate();
-});
+function cleanFormOnSuccess () {
+  uploadForm.reset();
+  showAlert('Успешно');
+}
 
-// hashtagsText.addEventListener('input', () => {
-//   uploadSubmitButton.disabled = !pristine.validate();
-// });
+function setUserFormSubmit (onSuccess) {
+  function checkResponse (response) {
+    if (response.ok) {
+      onSuccess();
+      cleanFormOnSuccess();
+    } else {
+      showAlert('Не удалось отправить форму. Попробуйте ещё раз');
+    }
+  }
 
-// commentText.addEventListener('input', () => {
-//   uploadSubmitButton.disabled = !pristine.validate();
-// });
+  uploadForm.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+    const isValid = pristine.validate();
+    if (isValid) {
+      const formData = new FormData(evt.target);
+      fetch(
+        'https://25.javascript.pages.academy/kekstagram',
+        {
+          method: 'POST',
+          body: formData,
+        },
+      )
+        .then(checkResponse)
+        .catch(() => {
+          showAlert('Не удалось отправить форму. Попробуйте ещё раз');
+        });
+    }
+  });
+}
+
+export {setUserFormSubmit};

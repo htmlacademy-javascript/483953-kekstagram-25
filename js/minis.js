@@ -15,29 +15,25 @@
 //  </a>
 //  </template>
 
-import {makePhotos} from './data.js';
+// import {makePhotos} from './data.js';
 
 const photoTemplate = document.querySelector('#picture').content;
 const photoContainer = document.querySelector('.pictures');
 const photoWrapper = photoTemplate.querySelector('.picture');
-const photos = makePhotos();
-const fragment = document.createDocumentFragment();
 
-for (let i = 0; i < photos.length; i++){
-  const chunk = photoWrapper.cloneNode(true);
-  const photoImg = chunk.querySelector('.picture__img');
-  const photoLikes = chunk.querySelector('.picture__likes');
-  const photoComments = chunk.querySelector('.picture__comments');
-  photoImg.src = photos[i].url;
-  photoLikes.textContent = photos[i].likes;
-  photoComments.textContent = photos[i].comments.length;
-  fragment.appendChild(chunk);
-}
+const renderPhotos = (photos) => {
+  const fragment = document.createDocumentFragment();
+  for (let i = 0; i < photos.length; i++){
+    const chunk = photoWrapper.cloneNode(true);
+    const photoImg = chunk.querySelector('.picture__img');
+    const photoLikes = chunk.querySelector('.picture__likes');
+    const photoComments = chunk.querySelector('.picture__comments');
+    photoImg.src = photos[i].url;
+    photoLikes.textContent = photos[i].likes;
+    photoComments.textContent = photos[i].comments.length;
+    fragment.appendChild(chunk);
+  }
+  photoContainer.appendChild(fragment);
+};
 
-photoContainer.appendChild(fragment);
-
-// Нужно немного по-другому действовать. Вне цикла создаем фрагмент. Внутри цикла клонируем шаблон, заполняем данные, аппендим к фрагменту. После цикла фрагмент аппендим к контейнеру.
-
-// Смысл фрагмента - в том, чтобы собрать элементы в какую-то общую обертку, не находящуюся в dom. Если цеплять сразу в контейнер (который уже находится в dom), это может вызвать серьезную нагрузку и ухудшить производительность
-
-export {photos};
+export {renderPhotos};
