@@ -4,17 +4,17 @@ import {renderPhotos} from './minis.js';
 import {setUserFormSubmit} from './form.js';
 import {closeBigPhoto} from './zoom.js';
 import {showAlert} from './util.js';
-
+const GET_URL = 'https://25.javascript.pages.academy/kekstagram/data';
 let photos;
 
 function convertToJSON (response) {
   return response.json();
 }
 
-function savePhotos (result) {
-  photos = result;
-  return result;
-}
+// function savePhotos (result) {
+//   photos = result;
+//   return result;
+// }
 
 function checkResponse (response) {
   if (response.ok) {
@@ -24,13 +24,13 @@ function checkResponse (response) {
   }
 }
 
-fetch('https://25.javascript.pages.academy/kekstagram/data')
+fetch(GET_URL)
   .then(convertToJSON)
-  .then(savePhotos)
+  // .then(savePhotos)
   .then(renderPhotos)
   .then(checkResponse)
   .catch(() => {
-    showAlert('Не удалось загрузить фотографии. Попробуйте ещё раз');
+    showAlert('Что-то пошло не так');
   });
 setUserFormSubmit(closeBigPhoto);
 

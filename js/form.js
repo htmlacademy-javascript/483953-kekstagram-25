@@ -140,6 +140,7 @@ function setUserFormSubmit (onSuccess) {
       showAlert('Не удалось отправить форму. Попробуйте ещё раз');
     }
   }
+const POST_URL = 'https://25.javascript.pages.academy/kekstagram';
 
   uploadForm.addEventListener('submit', (evt) => {
     evt.preventDefault();
@@ -147,7 +148,7 @@ function setUserFormSubmit (onSuccess) {
     if (isValid) {
       const formData = new FormData(evt.target);
       fetch(
-        'https://25.javascript.pages.academy/kekstagram',
+        POST_URL,
         {
           method: 'POST',
           body: formData,
