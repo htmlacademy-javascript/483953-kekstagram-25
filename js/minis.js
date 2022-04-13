@@ -21,7 +21,7 @@ const photoTemplate = document.querySelector('#picture').content;
 const photoContainer = document.querySelector('.pictures');
 const photoWrapper = photoTemplate.querySelector('.picture');
 
-const renderPhotos = (photos) => {
+function renderPhotos (photos) {
   const fragment = document.createDocumentFragment();
   for (let i = 0; i < photos.length; i++){
     const chunk = photoWrapper.cloneNode(true);
@@ -34,6 +34,6 @@ const renderPhotos = (photos) => {
     fragment.appendChild(chunk);
   }
   photoContainer.appendChild(fragment);
-};
+}
 
 export {renderPhotos};
