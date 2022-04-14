@@ -17,6 +17,15 @@ function checkResponse (response) {
   return response;
 }
 
+async function getData () {
+  photos = await fetch(GET_URL)
+    .then(checkResponse);
+  photos = await convertToJSON(photos);
+  return photos;
+}
+
+getData();
+
 fetch(GET_URL)
   .then(checkResponse)
   .then(convertToJSON)
