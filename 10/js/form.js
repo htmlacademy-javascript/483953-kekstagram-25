@@ -6,6 +6,8 @@
 import {setupPhoto} from './scale.js';
 import {getDefaultEffects} from './filters.js';
 import {showAlert} from './util.js';
+import {sendData} from './fetch.js';
+import {closeBigPhoto} from './zoom.js';
 
 const upload = document.querySelector('#upload-file');
 const uploadOverlay = document.querySelector('.img-upload__overlay');
@@ -16,7 +18,6 @@ const RE = /^#[a-zA-Zа-яА-ЯёЁ0-9]{1,19}$/;
 const hashtagsText = document.querySelector('.text__hashtags');
 const commentText = uploadForm.querySelector('.text__description');
 const MAX_HASHTAGS_COUNT = 5;
-
 
 function closePopup() {
   uploadOverlay.classList.add('hidden');
@@ -126,39 +127,29 @@ pristine.addValidator(
   'Максимум 140 символов'
 );
 
+// все, что касается отправки, нужно убрать в тот же модуль, где загрузка. По событию submit мы должны вызвать метод типа sendForm, который получит на вход данные формы, функцию для вызова в случае успешной отправки и функцию для вызова в случае ошибки отправки формы
+
 function cleanFormOnSuccess () {
   uploadForm.reset();
   showAlert('Успешно');
 }
 
-function setUserFormSubmit (onSuccess) {
-  function checkResponse (response) {
-    if (response.ok) {
-      onSuccess();
-      cleanFormOnSuccess();
-    } else {
-      showAlert('Не удалось отправить форму. Попробуйте ещё раз');
-    }
-  }
-
-  uploadForm.addEventListener('submit', (evt) => {
-    evt.preventDefault();
-    const isValid = pristine.validate();
-    if (isValid) {
-      const formData = new FormData(evt.target);
-      fetch(
-        'https://25.javascript.pages.academy/kekstagram',
-        {
-          method: 'POST',
-          body: formData,
-        },
-      )
-        .then(checkResponse)
-        .catch(() => {
-          showAlert('Не удалось отправить форму. Попробуйте ещё раз');
-        });
-    }
-  });
+function onErrorFormSubmit () {
+  showAlert('Не удалось отправить форму. Попробуйте ещё раз');
 }
 
-export {setUserFormSubmit};
+function onSuccessFormSubmit () {
+  closeBigPhoto();
+  cleanFormOnSuccess();
+}
+
+uploadForm.addEventListener('submit', (evt) => {
+  evt.preventDefault();
+  const isValid = pristine.validate();
+  if (isValid) {
+    const formData = new FormData(evt.target);
+    sendData(formData, onSuccessFormSubmit, onErrorFormSubmit);
+  } else {
+    showAlert('Форма содержит ошибки');
+  }
+});
