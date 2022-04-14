@@ -21,4 +21,17 @@ const showAlert = (message) => {
   }, ALERT_SHOW_TIME);
 };
 
+function shuffle (b) {
+  const a = b.slice();
+  let j, x, i;
+  for (i = a.length - 1; i > 0; i--) {
+    j = Math.floor(Math.random() * (i + 1));
+    x = a[i];
+    a[i] = a[j];
+    a[j] = x;
+  }
+  return a;
+}
+
 export {showAlert};
+export {shuffle};

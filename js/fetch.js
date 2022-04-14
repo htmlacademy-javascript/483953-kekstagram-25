@@ -4,7 +4,7 @@ import {renderPhotos} from './minis.js';
 import {showAlert} from './util.js';
 const GET_URL = 'https://25.javascript.pages.academy/kekstagram/data';
 const POST_URL = 'https://25.javascript.pages.academy/kekstagram';
-let photos;
+// let photos;
 
 function convertToJSON (response) {
   return response.json();
@@ -18,10 +18,12 @@ function checkResponse (response) {
 }
 
 async function getData () {
-  photos = await fetch(GET_URL)
-    .then(checkResponse);
-  photos = await convertToJSON(photos);
-  return photos;
+  const photos = await fetch(GET_URL)
+    .then(checkResponse)
+    .catch(() => {
+      showAlert('Что-то пошло не так');
+    });
+  return await convertToJSON(photos);
 }
 
 getData();
@@ -53,5 +55,5 @@ function sendData (formData, onSuccess, onError) {
     .catch(onError);
 }
 
-export {photos};
+export {getData};
 export {sendData};
