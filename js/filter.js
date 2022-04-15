@@ -12,11 +12,14 @@
 import {getData} from './fetch.js';
 import {renderPhotos} from './minis.js';
 import {shuffle} from './util.js';
+import {debounce} from './util.js';
 
 const imgFilters = document.querySelector('.img-filters');
 const defaultBtn = document.querySelector('#filter-default');
 const randomBtn = document.querySelector('#filter-random');
 const discussedBtn = document.querySelector('#filter-discussed');
+const SHUFFLED_PHOTOS_COUNT = 10;
+const RERENDER_DELAY = 500;
 
 imgFilters.classList.remove('img-filters--inactive');
 
@@ -35,7 +38,7 @@ async function renderDiscussed () {
   const sortedPhotos = photos.slice().sort(compareCommentsCount);
   renderPhotos(sortedPhotos);
 }
-const SHUFFLED_PHOTOS_COUNT = 10;
+
 async function renderShuffled () {
   const photos = await getData();
   let shuffledPhotos = shuffle(photos);
@@ -43,15 +46,13 @@ async function renderShuffled () {
   renderPhotos(shuffledPhotos);
 }
 
-defaultBtn.addEventListener('click', async () => {
+async function renderStandard () {
   const photos = await getData();
   renderPhotos(photos);
-});
+}
 
-randomBtn.addEventListener('click', () => {
-  renderShuffled();
-});
+defaultBtn.addEventListener('click', debounce(renderStandard, RERENDER_DELAY));
 
-discussedBtn.addEventListener('click', () => {
-  renderDiscussed();
-});
+randomBtn.addEventListener('click', debounce(renderShuffled, RERENDER_DELAY));
+
+discussedBtn.addEventListener('click', debounce(renderDiscussed, RERENDER_DELAY));

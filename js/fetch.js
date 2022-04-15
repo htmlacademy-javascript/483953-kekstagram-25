@@ -2,9 +2,9 @@
 
 import {renderPhotos} from './minis.js';
 import {showAlert} from './util.js';
+
 const GET_URL = 'https://25.javascript.pages.academy/kekstagram/data';
 const POST_URL = 'https://25.javascript.pages.academy/kekstagram';
-// let photos;
 
 function convertToJSON (response) {
   return response.json();
@@ -37,13 +37,6 @@ fetch(GET_URL)
   });
 
 function sendData (formData, onSuccess, onError) {
-  function checkResponseAndClear (response) {
-    if (response.ok) {
-      onSuccess();
-    } else {
-      onError();
-    }
-  }
   fetch(
     POST_URL,
     {
@@ -51,7 +44,13 @@ function sendData (formData, onSuccess, onError) {
       body: formData,
     },
   )
-    .then(checkResponseAndClear)
+    .then((response) => {
+      if (response.ok) {
+        onSuccess();
+      } else {
+        onError();
+      }
+    })
     .catch(onError);
 }
 
