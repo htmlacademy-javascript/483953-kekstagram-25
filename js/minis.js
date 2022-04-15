@@ -15,13 +15,15 @@
 //  </a>
 //  </template>
 
-// import {makePhotos} from './data.js';
-
 const photoTemplate = document.querySelector('#picture').content;
 const photoContainer = document.querySelector('.pictures');
 const photoWrapper = photoTemplate.querySelector('.picture');
 
 function renderPhotos (photos) {
+  const photoWrapperAll = document.querySelectorAll('.picture');
+  for (let i = 0; i < photoWrapperAll.length; i++){
+    photoWrapperAll[i].remove();
+  }
   const fragment = document.createDocumentFragment();
   for (let i = 0; i < photos.length; i++){
     const chunk = photoWrapper.cloneNode(true);
