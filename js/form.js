@@ -4,8 +4,10 @@
 
 // После выбора изображения (изменения значения поля #upload-file), показывается форма редактирования изображения. У элемента .img-upload__overlay удаляется класс hidden, а body задаётся класс modal-open.
 import {setupPhoto} from './scale.js';
-import {currentStep} from './scale.js';
 import {getDefaultEffects} from './filters.js';
+import {showAlert} from './util.js';
+import {sendData} from './fetch.js';
+import {closeBigPhoto} from './zoom.js';
 
 const upload = document.querySelector('#upload-file');
 const uploadOverlay = document.querySelector('.img-upload__overlay');
@@ -17,7 +19,6 @@ const hashtagsText = document.querySelector('.text__hashtags');
 const commentText = uploadForm.querySelector('.text__description');
 const MAX_HASHTAGS_COUNT = 5;
 
-
 function closePopup() {
   uploadOverlay.classList.add('hidden');
   document.body.classList.remove('modal-open');
@@ -27,7 +28,7 @@ function closePopup() {
 function openForm (){
   uploadOverlay.classList.remove('hidden');
   uploadForm.reset();
-  setupPhoto(currentStep);
+  setupPhoto();
   getDefaultEffects();
 }
 
@@ -126,15 +127,29 @@ pristine.addValidator(
   'Максимум 140 символов'
 );
 
+// все, что касается отправки, нужно убрать в тот же модуль, где загрузка. По событию submit мы должны вызвать метод типа sendForm, который получит на вход данные формы, функцию для вызова в случае успешной отправки и функцию для вызова в случае ошибки отправки формы
+
+function cleanFormOnSuccess () {
+  uploadForm.reset();
+  showAlert('Успешно');
+}
+
+function onErrorFormSubmit () {
+  showAlert('Не удалось отправить форму. Попробуйте ещё раз');
+}
+
+function onSuccessFormSubmit () {
+  closeBigPhoto();
+  cleanFormOnSuccess();
+}
+
 uploadForm.addEventListener('submit', (evt) => {
   evt.preventDefault();
-  pristine.validate();
+  const isValid = pristine.validate();
+  if (isValid) {
+    const formData = new FormData(evt.target);
+    sendData(formData, onSuccessFormSubmit, onErrorFormSubmit);
+  } else {
+    showAlert('Форма содержит ошибки');
+  }
 });
-
-// hashtagsText.addEventListener('input', () => {
-//   uploadSubmitButton.disabled = !pristine.validate();
-// });
-
-// commentText.addEventListener('input', () => {
-//   uploadSubmitButton.disabled = !pristine.validate();
-// });

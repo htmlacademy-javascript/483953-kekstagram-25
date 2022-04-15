@@ -18,7 +18,7 @@ const SCALE_MIN = 25;
 const SCALE_MAX = 100;
 let currentStep = 100;
 
-function setupPhoto (currentStep) {
+function setupPhoto () {
   scaleInput.value = `${currentStep}%`;
   photo.style = `transform: scale(${currentStep * 0.01})`;
 }
@@ -26,14 +26,14 @@ function setupPhoto (currentStep) {
 scaleBigger.addEventListener('click', () => {
   if (currentStep < SCALE_MAX) {
     currentStep += SCALE_STEP;
-    setupPhoto(currentStep);
+    setupPhoto();
   }
 });
 
 scaleSmaller.addEventListener('click', () => {
   if (currentStep > SCALE_MIN) {
     currentStep -= SCALE_STEP;
-    setupPhoto(currentStep);
+    setupPhoto();
   }
 });
 
