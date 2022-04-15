@@ -36,18 +36,26 @@ function compareCommentsCount (photoA, photoB) {
 async function renderDiscussed () {
   const photos = await getData();
   const sortedPhotos = photos.slice().sort(compareCommentsCount);
+  defaultBtn.classList.remove('img-filters__button--active');
+  randomBtn.classList.remove('img-filters__button--active');
+  discussedBtn.classList.add('img-filters__button--active');
   renderPhotos(sortedPhotos);
 }
 
 async function renderShuffled () {
   const photos = await getData();
-  let shuffledPhotos = shuffle(photos);
-  shuffledPhotos = shuffledPhotos.slice(0, SHUFFLED_PHOTOS_COUNT);
+  const shuffledPhotos = shuffle(photos).slice(0, SHUFFLED_PHOTOS_COUNT);
+  defaultBtn.classList.remove('img-filters__button--active');
+  randomBtn.classList.add('img-filters__button--active');
+  discussedBtn.classList.remove('img-filters__button--active');
   renderPhotos(shuffledPhotos);
 }
 
 async function renderStandard () {
   const photos = await getData();
+  defaultBtn.classList.add('img-filters__button--active');
+  randomBtn.classList.remove('img-filters__button--active');
+  discussedBtn.classList.remove('img-filters__button--active');
   renderPhotos(photos);
 }
 

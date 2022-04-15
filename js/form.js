@@ -27,6 +27,7 @@ function closePopup() {
 
 function openForm (){
   uploadOverlay.classList.remove('hidden');
+  document.body.classList.add('modal-open');
   setupPhoto();
   getDefaultEffects();
 }

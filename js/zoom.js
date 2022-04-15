@@ -64,12 +64,10 @@ async function showBigPhoto (evt) {
 
     // Описание фотографии description вставьте строкой в блок .social__caption.
     photoDescription.textContent = photos[elem].description;
+
+    // После открытия окна добавьте тегу <body> класс modal-open, чтобы контейнер с фотографиями позади не прокручивался при скролле. При закрытии окна не забудьте удалить этот класс.
+    document.body.classList.add('modal-open');
   }
-
-  // После открытия окна добавьте тегу <body> класс modal-open, чтобы контейнер с фотографиями позади не прокручивался при скролле. При закрытии окна не забудьте удалить этот класс.
-  document.body.classList.add('modal-open');
-
-  socialCommentsBtn.classList.remove('hidden');
 }
 
 pictureList.addEventListener('click', showBigPhoto);
@@ -100,6 +98,9 @@ function setComments (photo, commentsPage) {
 
   if (photo.comments.length === (commentsPage + 1) * NEXT_COMMENTS_COUNT || photo.comments.length < (commentsPage + 1) * NEXT_COMMENTS_COUNT) {
     socialCommentsBtn.classList.add('hidden');
+  }
+  else {
+    socialCommentsBtn.classList.remove('hidden');
   }
 }
 
