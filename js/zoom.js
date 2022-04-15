@@ -1,4 +1,4 @@
-import {getData} from './fetch.js';
+import {getPhotos} from './fetch.js';
 
 // Для отображения окна нужно удалять класс hidden у элемента .big-picture и каждый раз заполнять его данными о конкретной фотографии:
 
@@ -38,9 +38,9 @@ function closeBigPhoto () {
   document.removeEventListener('keydown', onPopupEscKeydown);
 }
 
-async function showBigPhoto (evt) {
+function showBigPhoto (evt) {
   if (evt.target.matches('img')){
-    const photos = await getData();
+    const photos = getPhotos();
     photoBig.classList.remove('hidden');
     document.addEventListener('keydown', onPopupEscKeydown);
 
@@ -103,9 +103,9 @@ function setComments (photo, commentsPage) {
   }
 }
 
-photoCommentsLoader.addEventListener ('click', async () => {
+photoCommentsLoader.addEventListener ('click', () => {
   index++;
-  const photos = await getData();
+  const photos = getPhotos();
   setComments(photos[elem], index);
 });
 
