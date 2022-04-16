@@ -15,6 +15,8 @@
 //  </a>
 //  </template>
 
+// import {makePhotos} from './data.js';
+
 const photoTemplate = document.querySelector('#picture').content;
 const photoContainer = document.querySelector('.pictures');
 const photoWrapper = photoTemplate.querySelector('.picture');
