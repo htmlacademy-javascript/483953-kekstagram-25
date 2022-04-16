@@ -26,8 +26,6 @@ async function getData () {
   return await convertToJSON(photos);
 }
 
-getData();
-
 fetch(GET_URL)
   .then(checkResponse)
   .then(convertToJSON)

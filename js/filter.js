@@ -20,6 +20,7 @@ const randomBtn = document.querySelector('#filter-random');
 const discussedBtn = document.querySelector('#filter-discussed');
 const SHUFFLED_PHOTOS_COUNT = 10;
 const RERENDER_DELAY = 500;
+let photos = [];
 
 imgFilters.classList.remove('img-filters--inactive');
 
@@ -33,31 +34,37 @@ function compareCommentsCount (photoA, photoB) {
   return commentsCountB - commentsCountA;
 }
 
-async function renderDiscussed () {
-  const photos = await getData();
-  const sortedPhotos = photos.slice().sort(compareCommentsCount);
+function renderDiscussed () {
+  const sortedPhotos = getPhotos().slice().sort(compareCommentsCount);
   defaultBtn.classList.remove('img-filters__button--active');
   randomBtn.classList.remove('img-filters__button--active');
   discussedBtn.classList.add('img-filters__button--active');
   renderPhotos(sortedPhotos);
 }
 
-async function renderShuffled () {
-  const photos = await getData();
-  const shuffledPhotos = shuffle(photos).slice(0, SHUFFLED_PHOTOS_COUNT);
+function renderShuffled () {
+  const shuffledPhotos = shuffle(getPhotos()).slice(0, SHUFFLED_PHOTOS_COUNT);
   defaultBtn.classList.remove('img-filters__button--active');
   randomBtn.classList.add('img-filters__button--active');
   discussedBtn.classList.remove('img-filters__button--active');
   renderPhotos(shuffledPhotos);
 }
 
-async function renderStandard () {
-  const photos = await getData();
+function renderStandard () {
   defaultBtn.classList.add('img-filters__button--active');
   randomBtn.classList.remove('img-filters__button--active');
   discussedBtn.classList.remove('img-filters__button--active');
-  renderPhotos(photos);
+  renderPhotos(getPhotos());
 }
+
+function getPhotos() {
+  return photos;
+}
+
+getData().then((data) => {
+  photos = data.slice();
+});
+
 
 defaultBtn.addEventListener('click', debounce(renderStandard, RERENDER_DELAY));
 
