@@ -72,15 +72,6 @@ async function showBigPhoto (evt) {
 
 pictureList.addEventListener('click', showBigPhoto);
 
-// <li class="social__comment">
-//     <img
-//         class="social__picture"
-//         src="{{аватар}}"
-//         alt="{{имя комментатора}}"
-//         width="35" height="35">
-//     <p class="social__text">{{текст комментария}}</p>
-// </li>
-
 // В модуле, который отвечает за отрисовку окна с полноразмерным изображением, доработайте код по выводу списка комментариев таким образом, чтобы список показывался не полностью, а по 5 элементов, и следующие 5 элементов добавлялись бы по нажатию на кнопку «Загрузить ещё». Не забудьте реализовать обновление числа показанных комментариев в блоке .social__comment-count.
 
 function setComments (photo, commentsPage) {
@@ -112,4 +103,4 @@ photoCommentsLoader.addEventListener ('click', async () => {
 
 // нужно обновлять количество показанных комментариев в блоке «5 комментариев из 17» и нужно скрывать кнопку Загрузить ещё, если больше грузить нечего
 
-export {closeBigPhoto, showBigPhoto};
+export {closeBigPhoto};

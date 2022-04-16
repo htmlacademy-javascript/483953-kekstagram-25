@@ -65,7 +65,6 @@ getData().then((data) => {
   photos = data.slice();
 });
 
-
 defaultBtn.addEventListener('click', debounce(renderStandard, RERENDER_DELAY));
 
 randomBtn.addEventListener('click', debounce(renderShuffled, RERENDER_DELAY));

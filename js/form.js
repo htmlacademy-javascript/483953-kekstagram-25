@@ -4,6 +4,7 @@
 
 // После выбора изображения (изменения значения поля #upload-file), показывается форма редактирования изображения. У элемента .img-upload__overlay удаляется класс hidden, а body задаётся класс modal-open.
 import {setupPhoto} from './scale.js';
+import {resetPhotoStyle} from './scale.js';
 import {getDefaultEffects} from './effects.js';
 import {showAlert} from './util.js';
 import {sendData} from './fetch.js';
@@ -18,10 +19,17 @@ const RE = /^#[a-zA-Zа-яА-ЯёЁ0-9]{1,19}$/;
 const hashtagsText = document.querySelector('.text__hashtags');
 const commentText = uploadForm.querySelector('.text__description');
 const MAX_HASHTAGS_COUNT = 5;
+const successMsg = document.querySelector('#success').content;
+const successMsgContainer = successMsg.querySelector('.success');
+const successMsgBtn = successMsg.querySelector('.success__button');
+const errorMsg = document.querySelector('#error').content;
+const errorMsgContainer = errorMsg.querySelector('.error');
+const errorMsgBtn = errorMsg.querySelector('.error__button');
 
 function closePopup() {
   uploadOverlay.classList.add('hidden');
   document.body.classList.remove('modal-open');
+  resetPhotoStyle();
   uploadForm.reset();
 }
 
@@ -127,21 +135,86 @@ pristine.addValidator(
   'Максимум 140 символов'
 );
 
-// все, что касается отправки, нужно убрать в тот же модуль, где загрузка. По событию submit мы должны вызвать метод типа sendForm, который получит на вход данные формы, функцию для вызова в случае успешной отправки и функцию для вызова в случае ошибки отправки формы
-
 function cleanFormOnSuccess () {
   uploadForm.reset();
   showAlert('Успешно');
 }
 
 function onErrorFormSubmit () {
-  showAlert('Не удалось отправить форму. Попробуйте ещё раз');
+  printErrorMsg();
 }
 
 function onSuccessFormSubmit () {
   closeBigPhoto();
   cleanFormOnSuccess();
+  printSuccessMsg();
 }
+
+function printSuccessMsg () {
+  document.body.appendChild(successMsg);
+}
+
+function closeSuccessMsg () {
+  successMsgContainer.classList.add('hidden');
+}
+
+successMsgBtn.addEventListener('click', (evt) => {
+  evt.preventDefault();
+  closeSuccessMsg();
+});
+
+document.addEventListener('keydown', (evt) => {
+  if (evt.key === 'Escape'){
+    evt.preventDefault();
+    closeSuccessMsg();
+  }
+});
+
+document.addEventListener('click', (evt) => {
+  const successMsgWindow = document.querySelector('.success__inner');
+  const target = evt.target;
+  const isSuccessMsgWindow = target === successMsgWindow || successMsgWindow.contains(target);
+  const successMsgWindowHidden = successMsgWindow.classList.contains('hidden');
+
+  if (!isSuccessMsgWindow && !successMsgWindowHidden) {
+    toggleMenu(successMsgContainer);
+  }
+});
+
+function printErrorMsg () {
+  document.body.appendChild(errorMsg);
+}
+
+function closeErrorMsg () {
+  errorMsgContainer.classList.add('hidden');
+}
+
+errorMsgBtn.addEventListener('click', (evt) => {
+  evt.preventDefault();
+  closeErrorMsg();
+});
+
+document.addEventListener('keydown', (evt) => {
+  if (evt.key === 'Escape'){
+    evt.preventDefault();
+    closeErrorMsg();
+  }
+});
+
+function toggleMenu (container) {
+  container.classList.toggle('hidden');
+}
+
+document.addEventListener('click', (evt) => {
+  const errorMsgWindow = document.querySelector('.error__inner');
+  const target = evt.target;
+  const isErrorMsgWindow = target === errorMsgWindow || errorMsgWindow.contains(target);
+  const errorMsgWindowHidden = errorMsgWindow.classList.contains('hidden');
+
+  if (!isErrorMsgWindow && !errorMsgWindowHidden) {
+    toggleMenu(errorMsgContainer);
+  }
+});
 
 uploadForm.addEventListener('submit', (evt) => {
   evt.preventDefault();

@@ -5,18 +5,6 @@
 // Количество комментариев comments выведите в блок .picture__comments.
 // Отрисуйте сгенерированные DOM-элементы в блок .pictures. Для вставки элементов используйте DocumentFragment.
 
-//  <template id="picture">
-//  <a href="#" class="picture">
-//    <img class="picture__img" src="" width="182" height="182" alt="Случайная фотография">
-//    <p class="picture__info">
-//      <span class="picture__comments"></span>
-//      <span class="picture__likes"></span>
-//    </p>
-//  </a>
-//  </template>
-
-// import {makePhotos} from './data.js';
-
 const photoTemplate = document.querySelector('#picture').content;
 const photoContainer = document.querySelector('.pictures');
 const photoWrapper = photoTemplate.querySelector('.picture');

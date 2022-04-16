@@ -10,7 +10,6 @@
 const scaleBigger = document.querySelector('.scale__control--bigger');
 const scaleSmaller = document.querySelector('.scale__control--smaller');
 const scaleInput = document.querySelector('.scale__control--value');
-const scaleFieldset = document.querySelector('.img-upload__scale');
 const photo = document.querySelector('.img-upload__preview img');
 
 const SCALE_STEP = 25;
@@ -21,6 +20,10 @@ let currentStep = 100;
 function setupPhoto () {
   scaleInput.value = `${currentStep}%`;
   photo.style = `transform: scale(${currentStep * 0.01})`;
+}
+
+function resetPhotoStyle () {
+  currentStep = SCALE_MAX;
 }
 
 scaleBigger.addEventListener('click', () => {
@@ -37,6 +40,5 @@ scaleSmaller.addEventListener('click', () => {
   }
 });
 
-export {scaleFieldset};
 export {setupPhoto};
-export {currentStep};
+export {resetPhotoStyle};
