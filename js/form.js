@@ -148,8 +148,6 @@ function onSuccessFormSubmit () {
   printSuccessMsg();
 }
 
-printErrorMsg()
-
 function printSuccessMsg () {
   document.body.appendChild(successMsg);
 
@@ -214,6 +212,7 @@ uploadForm.addEventListener('submit', (evt) => {
   if (isValid) {
     const formData = new FormData(evt.target);
     sendData(formData, onSuccessFormSubmit, onErrorFormSubmit);
+    closePopup();
   } else {
     showAlert('Форма содержит ошибки');
   }
