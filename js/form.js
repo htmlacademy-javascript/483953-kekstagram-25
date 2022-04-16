@@ -4,7 +4,7 @@
 
 // После выбора изображения (изменения значения поля #upload-file), показывается форма редактирования изображения. У элемента .img-upload__overlay удаляется класс hidden, а body задаётся класс modal-open.
 import {setupPhoto} from './scale.js';
-import {getDefaultEffects} from './filters.js';
+import {getDefaultEffects} from './effects.js';
 import {showAlert} from './util.js';
 import {sendData} from './fetch.js';
 import {closeBigPhoto} from './zoom.js';
