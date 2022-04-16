@@ -9,7 +9,7 @@
 
 // Воспользуйтесь приёмом «устранение дребезга», чтобы при переключении фильтра обновление списка элементов, подходящих под фильтры, происходило не чаще, чем один раз в полсекунды.
 
-import {getData} from './fetch.js';
+import {getPhotos} from './fetch.js';
 import {renderPhotos} from './minis.js';
 import {shuffle} from './util.js';
 import {debounce} from './util.js';
@@ -20,6 +20,8 @@ const randomBtn = document.querySelector('#filter-random');
 const discussedBtn = document.querySelector('#filter-discussed');
 const SHUFFLED_PHOTOS_COUNT = 10;
 const RERENDER_DELAY = 500;
+
+const photos = getPhotos();
 
 imgFilters.classList.remove('img-filters--inactive');
 
@@ -33,8 +35,7 @@ function compareCommentsCount (photoA, photoB) {
   return commentsCountB - commentsCountA;
 }
 
-async function renderDiscussed () {
-  const photos = await getData();
+function renderDiscussed () {
   const sortedPhotos = photos.slice().sort(compareCommentsCount);
   defaultBtn.classList.remove('img-filters__button--active');
   randomBtn.classList.remove('img-filters__button--active');

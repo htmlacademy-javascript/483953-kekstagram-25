@@ -18,15 +18,21 @@ function checkResponse (response) {
 }
 
 async function getData () {
-  const photos = await fetch(GET_URL)
+  const incomingPhotos = await fetch(GET_URL)
     .then(checkResponse)
     .catch(() => {
       showAlert('Что-то пошло не так');
     });
-  return await convertToJSON(photos);
+  return await convertToJSON(incomingPhotos);
 }
 
-getData();
+let photos;
+
+getData().then((result) => {
+  photos = result;
+});
+
+const getPhotos = () => photos;
 
 fetch(GET_URL)
   .then(checkResponse)
@@ -54,5 +60,5 @@ function sendData (formData, onSuccess, onError) {
     .catch(onError);
 }
 
-export {getData};
+export {getPhotos};
 export {sendData};
