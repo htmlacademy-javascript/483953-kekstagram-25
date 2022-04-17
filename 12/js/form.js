@@ -135,7 +135,6 @@ pristine.addValidator(
 
 function cleanFormOnSuccess () {
   uploadForm.reset();
-  showAlert('Успешно');
 }
 
 function onErrorFormSubmit () {
@@ -150,23 +149,14 @@ function onSuccessFormSubmit () {
 
 function printSuccessMsg () {
   document.body.appendChild(successMsg);
-
-  document.addEventListener('click', (evt) => {
-    const successMsgWindow = document.querySelector('.success__inner');
-    const target = evt.target;
-    const isSuccessMsgWindow = target === successMsgWindow || successMsgWindow.contains(target);
-    const isSuccessMsgBtn = target === successMsgBtn;
-    if (!isSuccessMsgWindow || isSuccessMsgBtn) {
-      closeSuccessMsg();
-    }
-  });
-
+  document.addEventListener('click', onSuccessOutClick);
   document.addEventListener('keydown', onSuccessEscKeydown);
 }
 
 function closeSuccessMsg () {
   const successMsgContainer = document.querySelector('.success');
   document.body.removeChild(successMsgContainer);
+  document.removeEventListener('click', onSuccessOutClick);
   document.removeEventListener('keydown', onSuccessEscKeydown);
 }
 
@@ -177,25 +167,26 @@ function onSuccessEscKeydown (evt) {
   }
 }
 
+function onSuccessOutClick (evt) {
+  const successMsgWindow = document.querySelector('.success__inner');
+  const target = evt.target;
+  const isSuccessMsgWindow = target === successMsgWindow || successMsgWindow.contains(target);
+  const isSuccessMsgBtn = target === successMsgBtn;
+  if (!isSuccessMsgWindow || isSuccessMsgBtn) {
+    closeSuccessMsg();
+  }
+}
+
 function printErrorMsg () {
   document.body.appendChild(errorMsg);
-
-  document.addEventListener('click', (evt) => {
-    const errorMsgWindow = document.querySelector('.error__inner');
-    const target = evt.target;
-    const isErrorMsgWindow = target === errorMsgWindow || errorMsgWindow.contains(target);
-    const isErrorMsgBtn = target === errorMsgBtn;
-    if (!isErrorMsgWindow || isErrorMsgBtn) {
-      closeErrorMsg();
-    }
-  });
-
+  document.addEventListener('click', onErrorOutClick);
   document.addEventListener('keydown', onErrorEscKeydown);
 }
 
 function closeErrorMsg () {
   const errorMsgContainer = document.querySelector('.error');
   document.body.removeChild(errorMsgContainer);
+  document.removeEventListener('click', onErrorOutClick);
   document.removeEventListener('keydown', onErrorEscKeydown);
 }
 
@@ -205,6 +196,17 @@ function onErrorEscKeydown (evt) {
     closeErrorMsg();
   }
 }
+
+function onErrorOutClick (evt) {
+  const errorMsgWindow = document.querySelector('.error__inner');
+  const target = evt.target;
+  const isErrorMsgWindow = target === errorMsgWindow || errorMsgWindow.contains(target);
+  const isErrorMsgBtn = target === errorMsgBtn;
+  if (!isErrorMsgWindow || isErrorMsgBtn) {
+    closeErrorMsg();
+  }
+}
+
 
 uploadForm.addEventListener('submit', (evt) => {
   evt.preventDefault();
