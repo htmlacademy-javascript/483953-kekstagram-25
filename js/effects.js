@@ -15,23 +15,14 @@
 // При выборе эффекта «Оригинал» слайдер скрывается.
 // При переключении эффектов, уровень насыщенности сбрасывается до начального значения (100%): слайдер, CSS-стиль изображения и значение поля должны обновляться.
 
+const NOFILTER = 'none';
+
 const effectLevel = document.querySelector('.img-upload__effect-level');
 const effectList = document.querySelector('.effects__list');
 const photo = document.querySelector('.img-upload__preview');
 const effectSlider = document.querySelector('.effect-level__slider');
 const effectValue = document.querySelector('.effect-level__value');
 const effectNone = document.querySelector('#effect-none');
-
-noUiSlider.create(effectSlider, {
-  range: {
-    min: 1,
-    max: 3,
-  },
-  start: 3,
-  step: 0.1,
-  connect: 'lower',
-});
-
 const filterParameters = {
   'chrome': {
     'filterName': 'grayscale',
@@ -131,33 +122,43 @@ const filterParameters = {
   },
 };
 
-let filter = 'none';
+let filter = NOFILTER;
+
+noUiSlider.create(effectSlider, {
+  range: {
+    min: 1,
+    max: 3,
+  },
+  start: 3,
+  step: 0.1,
+  connect: 'lower',
+});
 
 effectList.addEventListener('change', (evt) => {
   photo.classList.remove('effects__preview--none', 'effects__preview--chrome', 'effects__preview--marvin', 'effects__preview--phobos', 'effects__preview--heat', 'effects__preview--sepia');
   filter = evt.target.value;
-  if (evt.target.classList.contains('effects__radio') && filter !== 'none') {
+  if (evt.target.classList.contains('effects__radio') && filter !== NOFILTER) {
     photo.classList.add(`effects__preview--${filter}`);
     effectSlider.noUiSlider.updateOptions(filterParameters[filter]['filterParameter']);
     effectLevel.hidden = false;
   } else {
-    photo.style.filter = 'none';
+    photo.style.filter = NOFILTER;
     effectLevel.hidden = true;
   }
 });
 
 effectSlider.noUiSlider.on('update', () => {
-  if (filter !== 'none') {
+  if (filter !== NOFILTER) {
     photo.style.filter = `${filterParameters[filter]['filterName']}(${effectSlider.noUiSlider.get()})`;
     effectValue.value = parseFloat(effectSlider.noUiSlider.get());
   }
 });
 
-const getDefaultEffects = () => {
+function getDefaultEffects () {
   photo.classList.remove('effects__preview--none', 'effects__preview--chrome', 'effects__preview--marvin', 'effects__preview--phobos', 'effects__preview--heat', 'effects__preview--sepia');
   photo.removeAttribute('style');
   effectLevel.hidden = true;
   effectNone.checked = true;
-};
+}
 
 export {getDefaultEffects};

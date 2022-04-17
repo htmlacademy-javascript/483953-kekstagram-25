@@ -1,6 +1,9 @@
-import {getPhotos} from './fetch.js';
+import {getPhotos} from './filter.js';
 
 // Для отображения окна нужно удалять класс hidden у элемента .big-picture и каждый раз заполнять его данными о конкретной фотографии:
+
+const NEXT_COMMENTS_COUNT = 5;
+const RE = /([0-9]+)\.jpg/;
 
 const pictureList = document.querySelector('.pictures');
 const photoImg = document.querySelector('.big-picture__img img');
@@ -13,24 +16,22 @@ const commentsContainer = document.querySelector('.social__comments');
 const fragment = document.createDocumentFragment();
 const photoCommentsItem = document.querySelector('.social__comment');
 const closeBtn = document.querySelector('.big-picture__cancel');
-const NEXT_COMMENTS_COUNT = 5;
-let index;
-let elem;
 const photoCommentsItemCounter = document.querySelector('.social__comment-count');
 const socialCommentsBtn = document.querySelector('.social__comments-loader');
 
-// Напишите код для закрытия окна по нажатию клавиши Esc и клике по иконке закрытия.
+let index;
+let elem;
 
 closeBtn.addEventListener('click', () => {
   closeBigPhoto();
 });
 
-const onPopupEscKeydown = (evt) => {
+function onPopupEscKeydown (evt) {
   if (evt.key === 'Escape') {
     evt.preventDefault();
     closeBigPhoto();
   }
-};
+}
 
 function closeBigPhoto () {
   photoBig.classList.add('hidden');
@@ -43,8 +44,6 @@ function showBigPhoto (evt) {
     const photos = getPhotos();
     photoBig.classList.remove('hidden');
     document.addEventListener('keydown', onPopupEscKeydown);
-
-    const RE = /([0-9]+)\.jpg/;
     elem = evt.target.src.match(RE)[1] - 1;
 
     // Адрес изображения url подставьте как src изображения внутри блока .big-picture__img.
@@ -64,24 +63,13 @@ function showBigPhoto (evt) {
 
     // Описание фотографии description вставьте строкой в блок .social__caption.
     photoDescription.textContent = photos[elem].description;
+
+    // После открытия окна добавьте тегу <body> класс modal-open, чтобы контейнер с фотографиями позади не прокручивался при скролле. При закрытии окна не забудьте удалить этот класс.
+    document.body.classList.add('modal-open');
   }
-
-  // После открытия окна добавьте тегу <body> класс modal-open, чтобы контейнер с фотографиями позади не прокручивался при скролле. При закрытии окна не забудьте удалить этот класс.
-  document.body.classList.add('modal-open');
-
-  socialCommentsBtn.classList.remove('hidden');
 }
 
 pictureList.addEventListener('click', showBigPhoto);
-
-// <li class="social__comment">
-//     <img
-//         class="social__picture"
-//         src="{{аватар}}"
-//         alt="{{имя комментатора}}"
-//         width="35" height="35">
-//     <p class="social__text">{{текст комментария}}</p>
-// </li>
 
 // В модуле, который отвечает за отрисовку окна с полноразмерным изображением, доработайте код по выводу списка комментариев таким образом, чтобы список показывался не полностью, а по 5 элементов, и следующие 5 элементов добавлялись бы по нажатию на кнопку «Загрузить ещё». Не забудьте реализовать обновление числа показанных комментариев в блоке .social__comment-count.
 
@@ -101,6 +89,9 @@ function setComments (photo, commentsPage) {
   if (photo.comments.length === (commentsPage + 1) * NEXT_COMMENTS_COUNT || photo.comments.length < (commentsPage + 1) * NEXT_COMMENTS_COUNT) {
     socialCommentsBtn.classList.add('hidden');
   }
+  else {
+    socialCommentsBtn.classList.remove('hidden');
+  }
 }
 
 photoCommentsLoader.addEventListener ('click', () => {
@@ -111,4 +102,4 @@ photoCommentsLoader.addEventListener ('click', () => {
 
 // нужно обновлять количество показанных комментариев в блоке «5 комментариев из 17» и нужно скрывать кнопку Загрузить ещё, если больше грузить нечего
 
-export {closeBigPhoto, showBigPhoto};
+export {closeBigPhoto};
