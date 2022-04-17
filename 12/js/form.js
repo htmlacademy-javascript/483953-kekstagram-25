@@ -20,10 +20,8 @@ const hashtagsText = document.querySelector('.text__hashtags');
 const commentText = uploadForm.querySelector('.text__description');
 const MAX_HASHTAGS_COUNT = 5;
 const successMsg = document.querySelector('#success').content;
-const successMsgContainer = successMsg.querySelector('.success');
 const successMsgBtn = successMsg.querySelector('.success__button');
 const errorMsg = document.querySelector('#error').content;
-const errorMsgContainer = errorMsg.querySelector('.error');
 const errorMsgBtn = errorMsg.querySelector('.error__button');
 
 function closePopup() {
@@ -152,69 +150,61 @@ function onSuccessFormSubmit () {
 
 function printSuccessMsg () {
   document.body.appendChild(successMsg);
+
+  document.addEventListener('click', (evt) => {
+    const successMsgWindow = document.querySelector('.success__inner');
+    const target = evt.target;
+    const isSuccessMsgWindow = target === successMsgWindow || successMsgWindow.contains(target);
+    const isSuccessMsgBtn = target === successMsgBtn;
+    if (!isSuccessMsgWindow || isSuccessMsgBtn) {
+      closeSuccessMsg();
+    }
+  });
+
+  document.addEventListener('keydown', onSuccessEscKeydown);
 }
 
 function closeSuccessMsg () {
-  successMsgContainer.classList.add('hidden');
+  const successMsgContainer = document.querySelector('.success');
+  document.body.removeChild(successMsgContainer);
+  document.removeEventListener('keydown', onSuccessEscKeydown);
 }
 
-successMsgBtn.addEventListener('click', (evt) => {
-  evt.preventDefault();
-  closeSuccessMsg();
-});
-
-document.addEventListener('keydown', (evt) => {
+function onSuccessEscKeydown (evt) {
   if (evt.key === 'Escape'){
     evt.preventDefault();
     closeSuccessMsg();
   }
-});
-
-document.addEventListener('click', (evt) => {
-  const successMsgWindow = document.querySelector('.success__inner');
-  const target = evt.target;
-  const isSuccessMsgWindow = target === successMsgWindow || successMsgWindow.contains(target);
-  const successMsgWindowHidden = successMsgWindow.classList.contains('hidden');
-
-  if (!isSuccessMsgWindow && !successMsgWindowHidden) {
-    toggleMenu(successMsgContainer);
-  }
-});
+}
 
 function printErrorMsg () {
   document.body.appendChild(errorMsg);
+
+  document.addEventListener('click', (evt) => {
+    const errorMsgWindow = document.querySelector('.error__inner');
+    const target = evt.target;
+    const isErrorMsgWindow = target === errorMsgWindow || errorMsgWindow.contains(target);
+    const isErrorMsgBtn = target === errorMsgBtn;
+    if (!isErrorMsgWindow || isErrorMsgBtn) {
+      closeErrorMsg();
+    }
+  });
+
+  document.addEventListener('keydown', onErrorEscKeydown);
 }
 
 function closeErrorMsg () {
-  errorMsgContainer.classList.add('hidden');
+  const errorMsgContainer = document.querySelector('.error');
+  document.body.removeChild(errorMsgContainer);
+  document.removeEventListener('keydown', onErrorEscKeydown);
 }
 
-errorMsgBtn.addEventListener('click', (evt) => {
-  evt.preventDefault();
-  closeErrorMsg();
-});
-
-document.addEventListener('keydown', (evt) => {
+function onErrorEscKeydown (evt) {
   if (evt.key === 'Escape'){
     evt.preventDefault();
     closeErrorMsg();
   }
-});
-
-function toggleMenu (container) {
-  container.classList.toggle('hidden');
 }
-
-document.addEventListener('click', (evt) => {
-  const errorMsgWindow = document.querySelector('.error__inner');
-  const target = evt.target;
-  const isErrorMsgWindow = target === errorMsgWindow || errorMsgWindow.contains(target);
-  const errorMsgWindowHidden = errorMsgWindow.classList.contains('hidden');
-
-  if (!isErrorMsgWindow && !errorMsgWindowHidden) {
-    toggleMenu(errorMsgContainer);
-  }
-});
 
 uploadForm.addEventListener('submit', (evt) => {
   evt.preventDefault();
@@ -222,6 +212,7 @@ uploadForm.addEventListener('submit', (evt) => {
   if (isValid) {
     const formData = new FormData(evt.target);
     sendData(formData, onSuccessFormSubmit, onErrorFormSubmit);
+    closePopup();
   } else {
     showAlert('Форма содержит ошибки');
   }
