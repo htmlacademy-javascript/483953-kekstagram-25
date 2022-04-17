@@ -1,6 +1,9 @@
-import {getData} from './fetch.js';
+import {getPhotos} from './filter.js';
 
 // Для отображения окна нужно удалять класс hidden у элемента .big-picture и каждый раз заполнять его данными о конкретной фотографии:
+
+const NEXT_COMMENTS_COUNT = 5;
+const RE = /([0-9]+)\.jpg/;
 
 const pictureList = document.querySelector('.pictures');
 const photoImg = document.querySelector('.big-picture__img img');
@@ -13,24 +16,22 @@ const commentsContainer = document.querySelector('.social__comments');
 const fragment = document.createDocumentFragment();
 const photoCommentsItem = document.querySelector('.social__comment');
 const closeBtn = document.querySelector('.big-picture__cancel');
-const NEXT_COMMENTS_COUNT = 5;
-let index;
-let elem;
 const photoCommentsItemCounter = document.querySelector('.social__comment-count');
 const socialCommentsBtn = document.querySelector('.social__comments-loader');
 
-// Напишите код для закрытия окна по нажатию клавиши Esc и клике по иконке закрытия.
+let index;
+let elem;
 
 closeBtn.addEventListener('click', () => {
   closeBigPhoto();
 });
 
-const onPopupEscKeydown = (evt) => {
+function onPopupEscKeydown (evt) {
   if (evt.key === 'Escape') {
     evt.preventDefault();
     closeBigPhoto();
   }
-};
+}
 
 function closeBigPhoto () {
   photoBig.classList.add('hidden');
@@ -38,13 +39,11 @@ function closeBigPhoto () {
   document.removeEventListener('keydown', onPopupEscKeydown);
 }
 
-async function showBigPhoto (evt) {
+function showBigPhoto (evt) {
   if (evt.target.matches('img')){
-    const photos = await getData();
+    const photos = getPhotos();
     photoBig.classList.remove('hidden');
     document.addEventListener('keydown', onPopupEscKeydown);
-
-    const RE = /([0-9]+)\.jpg/;
     elem = evt.target.src.match(RE)[1] - 1;
 
     // Адрес изображения url подставьте как src изображения внутри блока .big-picture__img.
@@ -95,9 +94,9 @@ function setComments (photo, commentsPage) {
   }
 }
 
-photoCommentsLoader.addEventListener ('click', async () => {
+photoCommentsLoader.addEventListener ('click', () => {
   index++;
-  const photos = await getData();
+  const photos = getPhotos();
   setComments(photos[elem], index);
 });
 

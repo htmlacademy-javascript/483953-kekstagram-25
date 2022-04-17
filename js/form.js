@@ -10,15 +10,16 @@ import {showAlert} from './util.js';
 import {sendData} from './fetch.js';
 import {closeBigPhoto} from './zoom.js';
 
+const MAX_LENGTH = 140;
+const RE = /^#[a-zA-Zа-яА-ЯёЁ0-9]{1,19}$/;
+const MAX_HASHTAGS_COUNT = 5;
+
 const upload = document.querySelector('#upload-file');
 const uploadOverlay = document.querySelector('.img-upload__overlay');
 const closeBtn = document.querySelector('#upload-cancel');
 const uploadForm = document.querySelector('#upload-select-image');
-const MAX_LENGTH = 140;
-const RE = /^#[a-zA-Zа-яА-ЯёЁ0-9]{1,19}$/;
 const hashtagsText = document.querySelector('.text__hashtags');
 const commentText = uploadForm.querySelector('.text__description');
-const MAX_HASHTAGS_COUNT = 5;
 const successMsg = document.querySelector('#success').content;
 const successMsgBtn = successMsg.querySelector('.success__button');
 const errorMsg = document.querySelector('#error').content;
@@ -206,7 +207,6 @@ function onErrorOutClick (evt) {
     closeErrorMsg();
   }
 }
-
 
 uploadForm.addEventListener('submit', (evt) => {
   evt.preventDefault();
