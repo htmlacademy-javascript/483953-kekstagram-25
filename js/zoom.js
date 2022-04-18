@@ -62,7 +62,7 @@ const setComments = (photo, commentsPage) => {
   }
 };
 
-const showBigPhoto = (evt) => {
+const onThumbnailClick = (evt) => {
   if (evt.target.matches('img')){
     const photos = getPhotos();
     photoBig.classList.remove('hidden');
@@ -92,7 +92,7 @@ const showBigPhoto = (evt) => {
   }
 };
 
-pictureList.addEventListener('click', showBigPhoto);
+pictureList.addEventListener('click', onThumbnailClick);
 
 photoCommentsLoader.addEventListener ('click', () => {
   index++;

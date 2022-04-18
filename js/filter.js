@@ -56,9 +56,11 @@ const renderStandard = () => {
   renderPhotos(getPhotos());
 };
 
-
 getData().then((data) => {
-  photos = data.slice();
+  if (data) {
+    photos = data.slice();
+    renderPhotos(photos);
+  }
 });
 
 defaultBtn.addEventListener('click', debounce(renderStandard, RERENDER_DELAY));

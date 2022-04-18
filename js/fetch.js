@@ -9,10 +9,13 @@ const POST_URL = 'https://25.javascript.pages.academy/kekstagram';
 const convertToJSON = (response) => response.json();
 
 const checkResponse = (response) => {
-  if (!response.ok) {
-    showAlert('Не удалось загрузить фотографии. Попробуйте ещё раз');
+  if (response.ok) {
+    return convertToJSON(response);
   }
-  return response;
+  else {
+    showAlert('Не удалось загрузить фотографии. Попробуйте ещё раз');
+    return false;
+  }
 };
 
 const getData = async () => {
@@ -21,16 +24,14 @@ const getData = async () => {
     .catch(() => {
       showAlert('Что-то пошло не так');
     });
-  return await convertToJSON(photos);
+  return photos;
 };
 
-fetch(GET_URL)
-  .then(checkResponse)
-  .then(convertToJSON)
-  .then(renderPhotos)
-  .catch(() => {
-    showAlert('Что-то пошло не так');
-  });
+// fetch(GET_URL)
+//   .then(checkResponse)
+//   .catch(() => {
+//     showAlert('Что-то пошло не так');
+//   });
 
 const sendData = (formData, onSuccess, onError) => {
   fetch(

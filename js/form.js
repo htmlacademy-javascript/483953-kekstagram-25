@@ -47,7 +47,7 @@ closeBtn.addEventListener('click', () => {
   closePopup();
 });
 
-upload.addEventListener('keydown', (evt) => {
+uploadForm.addEventListener('keydown', (evt) => {
   if (evt.key === 'Escape'){
     evt.preventDefault();
     closePopup();
