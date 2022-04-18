@@ -7,21 +7,25 @@
 // Значение должно изменяться с шагом в 25. Например, если значение поля установлено в 50%, после нажатия на «+», значение должно стать равным 75%. Максимальное значение — 100%, минимальное — 25%. Значение по умолчанию — 100%;
 // При изменении значения поля .scale__control--value изображению внутри .img-upload__preview должен добавляться соответствующий стиль CSS, который с помощью трансформации scale задаёт масштаб. Например, если в поле стоит значение 75%, то в стиле изображения должно быть написано transform: scale(0.75).
 
-const scaleBigger = document.querySelector('.scale__control--bigger');
-const scaleSmaller = document.querySelector('.scale__control--smaller');
-const scaleInput = document.querySelector('.scale__control--value');
-const scaleFieldset = document.querySelector('.img-upload__scale');
-const photo = document.querySelector('.img-upload__preview img');
-
 const SCALE_STEP = 25;
 const SCALE_MIN = 25;
 const SCALE_MAX = 100;
+
+const scaleBigger = document.querySelector('.scale__control--bigger');
+const scaleSmaller = document.querySelector('.scale__control--smaller');
+const scaleInput = document.querySelector('.scale__control--value');
+const photo = document.querySelector('.img-upload__preview img');
+
 let currentStep = 100;
 
-function setupPhoto () {
+const setupPhoto = () => {
   scaleInput.value = `${currentStep}%`;
   photo.style = `transform: scale(${currentStep * 0.01})`;
-}
+};
+
+const resetPhotoStyle = () => {
+  currentStep = SCALE_MAX;
+};
 
 scaleBigger.addEventListener('click', () => {
   if (currentStep < SCALE_MAX) {
@@ -37,6 +41,5 @@ scaleSmaller.addEventListener('click', () => {
   }
 });
 
-export {scaleFieldset};
 export {setupPhoto};
-export {currentStep};
+export {resetPhotoStyle};

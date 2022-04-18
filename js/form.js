@@ -4,31 +4,40 @@
 
 // После выбора изображения (изменения значения поля #upload-file), показывается форма редактирования изображения. У элемента .img-upload__overlay удаляется класс hidden, а body задаётся класс modal-open.
 import {setupPhoto} from './scale.js';
-import {getDefaultEffects} from './filters.js';
+import {resetPhotoStyle} from './scale.js';
+import {getDefaultEffects} from './effects.js';
+import {showAlert} from './util.js';
+import {sendData} from './fetch.js';
+import {closeBigPhoto} from './zoom.js';
+
+const MAX_LENGTH = 140;
+const RE = /^#[a-zA-Zа-яА-ЯёЁ0-9]{1,19}$/;
+const MAX_HASHTAGS_COUNT = 5;
 
 const upload = document.querySelector('#upload-file');
 const uploadOverlay = document.querySelector('.img-upload__overlay');
 const closeBtn = document.querySelector('#upload-cancel');
 const uploadForm = document.querySelector('#upload-select-image');
-const MAX_LENGTH = 140;
-const RE = /^#[a-zA-Zа-яА-ЯёЁ0-9]{1,19}$/;
 const hashtagsText = document.querySelector('.text__hashtags');
 const commentText = uploadForm.querySelector('.text__description');
-const MAX_HASHTAGS_COUNT = 5;
+const successMsg = document.querySelector('#success').content;
+const successMsgBtn = successMsg.querySelector('.success__button');
+const errorMsg = document.querySelector('#error').content;
+const errorMsgBtn = errorMsg.querySelector('.error__button');
 
-
-function closePopup() {
+const closePopup = () => {
   uploadOverlay.classList.add('hidden');
   document.body.classList.remove('modal-open');
+  resetPhotoStyle();
   uploadForm.reset();
-}
+};
 
-function openForm (){
+const openForm = () => {
   uploadOverlay.classList.remove('hidden');
-  uploadForm.reset();
+  document.body.classList.add('modal-open');
   setupPhoto();
   getDefaultEffects();
-}
+};
 
 upload.addEventListener('change', () => {
   openForm();
@@ -38,7 +47,7 @@ closeBtn.addEventListener('click', () => {
   closePopup();
 });
 
-upload.addEventListener('keydown', (evt) => {
+uploadForm.addEventListener('keydown', (evt) => {
   if (evt.key === 'Escape'){
     evt.preventDefault();
     closePopup();
@@ -57,7 +66,7 @@ upload.addEventListener('keydown', (evt) => {
 // хэш-теги необязательны;
 // если фокус находится в поле ввода хэш-тега, нажатие на Esc не должно приводить к закрытию формы редактирования изображения.
 
-function isHashtagOk () {
+const isHashtagOk = () => {
   const hashtags = hashtagsText.value.split(' ');
   for (let i = 0; i < hashtags.length; i++){
     if (!(hashtags[i].match(RE) || hashtags[i] === '')) {
@@ -65,7 +74,7 @@ function isHashtagOk () {
     }
   }
   return true;
-}
+};
 
 const pristine = new Pristine(uploadForm,{
   classTo: 'img-upload__form',
@@ -73,21 +82,21 @@ const pristine = new Pristine(uploadForm,{
   errorTextClass: 'text__hashtags-error',
 });
 
-function checkHashtagCount () {
+const checkHashtagCount = () => {
   const hashtags = hashtagsText.value.split(' ');
   return (hashtags.length < MAX_HASHTAGS_COUNT);
-}
+};
 
-function checkHashtagUnique () {
+const checkHashtagUnique = () => {
   const hashtags = hashtagsText.value.split(' ');
   const hashtagsUnique = new Set(hashtags);
   return (hashtags.length === hashtagsUnique.size);
-}
+};
 
-function checkComment() {
+const checkComment = () => {
   const commentLength = uploadForm.querySelector('.text__description').value.length;
   return (commentLength <= MAX_LENGTH);
-}
+};
 
 hashtagsText.addEventListener('keydown', (evt) => {
   if (evt.key === 'Escape'){
@@ -125,15 +134,88 @@ pristine.addValidator(
   'Максимум 140 символов'
 );
 
+const cleanFormOnSuccess = () => {
+  uploadForm.reset();
+};
+
+const onSuccessEscKeydown = (evt) => {
+  if (evt.key === 'Escape'){
+    evt.preventDefault();
+    closeSuccessMsg();
+  }
+};
+
+const onSuccessOutClick = (evt) => {
+  const successMsgWindow = document.querySelector('.success__inner');
+  const target = evt.target;
+  const isSuccessMsgWindow = target === successMsgWindow || successMsgWindow.contains(target);
+  const isSuccessMsgBtn = target === successMsgBtn;
+  if (!isSuccessMsgWindow || isSuccessMsgBtn) {
+    closeSuccessMsg();
+  }
+};
+
+const printSuccessMsg = () => {
+  document.body.appendChild(successMsg);
+  document.addEventListener('click', onSuccessOutClick);
+  document.addEventListener('keydown', onSuccessEscKeydown);
+};
+
+const onSuccessFormSubmit = () => {
+  closeBigPhoto();
+  cleanFormOnSuccess();
+  printSuccessMsg();
+};
+
+function closeSuccessMsg () {
+  const successMsgContainer = document.querySelector('.success');
+  document.body.removeChild(successMsgContainer);
+  document.removeEventListener('click', onSuccessOutClick);
+  document.removeEventListener('keydown', onSuccessEscKeydown);
+}
+
+const onErrorOutClick = (evt) => {
+  const errorMsgWindow = document.querySelector('.error__inner');
+  const target = evt.target;
+  const isErrorMsgWindow = target === errorMsgWindow || errorMsgWindow.contains(target);
+  const isErrorMsgBtn = target === errorMsgBtn;
+  if (!isErrorMsgWindow || isErrorMsgBtn) {
+    closeErrorMsg();
+  }
+};
+
+const onErrorEscKeydown = (evt) => {
+  if (evt.key === 'Escape'){
+    evt.preventDefault();
+    closeErrorMsg();
+  }
+};
+
+const printErrorMsg = () => {
+  document.body.appendChild(errorMsg);
+  document.addEventListener('click', onErrorOutClick);
+  document.addEventListener('keydown', onErrorEscKeydown);
+};
+
+const onErrorFormSubmit = () => {
+  printErrorMsg();
+};
+
+function closeErrorMsg () {
+  const errorMsgContainer = document.querySelector('.error');
+  document.body.removeChild(errorMsgContainer);
+  document.removeEventListener('click', onErrorOutClick);
+  document.removeEventListener('keydown', onErrorEscKeydown);
+}
+
 uploadForm.addEventListener('submit', (evt) => {
   evt.preventDefault();
-  pristine.validate();
+  const isValid = pristine.validate();
+  if (isValid) {
+    const formData = new FormData(evt.target);
+    sendData(formData, onSuccessFormSubmit, onErrorFormSubmit);
+    closePopup();
+  } else {
+    showAlert('Форма содержит ошибки');
+  }
 });
-
-// hashtagsText.addEventListener('input', () => {
-//   uploadSubmitButton.disabled = !pristine.validate();
-// });
-
-// commentText.addEventListener('input', () => {
-//   uploadSubmitButton.disabled = !pristine.validate();
-// });
