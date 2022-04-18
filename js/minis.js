@@ -9,7 +9,7 @@ const photoTemplate = document.querySelector('#picture').content;
 const photoContainer = document.querySelector('.pictures');
 const photoWrapper = photoTemplate.querySelector('.picture');
 
-function renderPhotos (photos) {
+const renderPhotos = (photos) => {
   const photoWrapperAll = document.querySelectorAll('.picture');
   for (let i = 0; i < photoWrapperAll.length; i++){
     photoWrapperAll[i].remove();
@@ -26,6 +26,6 @@ function renderPhotos (photos) {
     fragment.appendChild(chunk);
   }
   photoContainer.appendChild(fragment);
-}
+};
 
 export {renderPhotos};

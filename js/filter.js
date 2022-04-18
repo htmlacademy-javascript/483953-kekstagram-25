@@ -23,42 +23,39 @@ let photos = [];
 
 imgFilters.classList.remove('img-filters--inactive');
 
-function getCommentsRank (photo) {
-  return photo.comments.length;
-}
+const getPhotos = () => photos;
 
-function compareCommentsCount (photoA, photoB) {
+const getCommentsRank = (photo) => photo.comments.length;
+
+const compareCommentsCount = (photoA, photoB) => {
   const commentsCountA = getCommentsRank(photoA);
   const commentsCountB = getCommentsRank(photoB);
   return commentsCountB - commentsCountA;
-}
+};
 
-function renderDiscussed () {
+const renderDiscussed = () => {
   const sortedPhotos = getPhotos().slice().sort(compareCommentsCount);
   defaultBtn.classList.remove('img-filters__button--active');
   randomBtn.classList.remove('img-filters__button--active');
   discussedBtn.classList.add('img-filters__button--active');
   renderPhotos(sortedPhotos);
-}
+};
 
-function renderShuffled () {
+const renderShuffled = () => {
   const shuffledPhotos = shuffle(getPhotos()).slice(0, SHUFFLED_PHOTOS_COUNT);
   defaultBtn.classList.remove('img-filters__button--active');
   randomBtn.classList.add('img-filters__button--active');
   discussedBtn.classList.remove('img-filters__button--active');
   renderPhotos(shuffledPhotos);
-}
+};
 
-function renderStandard () {
+const renderStandard = () => {
   defaultBtn.classList.add('img-filters__button--active');
   randomBtn.classList.remove('img-filters__button--active');
   discussedBtn.classList.remove('img-filters__button--active');
   renderPhotos(getPhotos());
-}
+};
 
-function getPhotos() {
-  return photos;
-}
 
 getData().then((data) => {
   photos = data.slice();

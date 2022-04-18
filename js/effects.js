@@ -154,11 +154,11 @@ effectSlider.noUiSlider.on('update', () => {
   }
 });
 
-function getDefaultEffects () {
+const getDefaultEffects = () => {
   photo.classList.remove('effects__preview--none', 'effects__preview--chrome', 'effects__preview--marvin', 'effects__preview--phobos', 'effects__preview--heat', 'effects__preview--sepia');
   photo.removeAttribute('style');
   effectLevel.hidden = true;
   effectNone.checked = true;
-}
+};
 
 export {getDefaultEffects};

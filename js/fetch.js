@@ -6,25 +6,23 @@ import {showAlert} from './util.js';
 const GET_URL = 'https://25.javascript.pages.academy/kekstagram/data';
 const POST_URL = 'https://25.javascript.pages.academy/kekstagram';
 
-function convertToJSON (response) {
-  return response.json();
-}
+const convertToJSON = (response) => response.json();
 
-function checkResponse (response) {
+const checkResponse = (response) => {
   if (!response.ok) {
     showAlert('Не удалось загрузить фотографии. Попробуйте ещё раз');
   }
   return response;
-}
+};
 
-async function getData () {
+const getData = async () => {
   const photos = await fetch(GET_URL)
     .then(checkResponse)
     .catch(() => {
       showAlert('Что-то пошло не так');
     });
   return await convertToJSON(photos);
-}
+};
 
 fetch(GET_URL)
   .then(checkResponse)
@@ -34,7 +32,7 @@ fetch(GET_URL)
     showAlert('Что-то пошло не так');
   });
 
-function sendData (formData, onSuccess, onError) {
+const sendData = (formData, onSuccess, onError) => {
   fetch(
     POST_URL,
     {
@@ -50,7 +48,7 @@ function sendData (formData, onSuccess, onError) {
       }
     })
     .catch(onError);
-}
+};
 
 export {getData};
 export {sendData};

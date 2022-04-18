@@ -26,12 +26,12 @@ closeBtn.addEventListener('click', () => {
   closeBigPhoto();
 });
 
-function onPopupEscKeydown (evt) {
+const onPopupEscKeydown = (evt) => {
   if (evt.key === 'Escape') {
     evt.preventDefault();
     closeBigPhoto();
   }
-}
+};
 
 function closeBigPhoto () {
   photoBig.classList.add('hidden');
@@ -39,7 +39,30 @@ function closeBigPhoto () {
   document.removeEventListener('keydown', onPopupEscKeydown);
 }
 
-function showBigPhoto (evt) {
+// В модуле, который отвечает за отрисовку окна с полноразмерным изображением, доработайте код по выводу списка комментариев таким образом, чтобы список показывался не полностью, а по 5 элементов, и следующие 5 элементов добавлялись бы по нажатию на кнопку «Загрузить ещё». Не забудьте реализовать обновление числа показанных комментариев в блоке .social__comment-count.
+
+const setComments = (photo, commentsPage) => {
+  for (let i = commentsPage * NEXT_COMMENTS_COUNT; i < Math.min(NEXT_COMMENTS_COUNT * (commentsPage + 1), photo.comments.length); i++){
+    const chunk = photoCommentsItem.cloneNode(true);
+    const photoComment = chunk.querySelector('.social__comment img');
+    photoComment.src = photo.comments[i].avatar;
+    photoComment.alt = photo.comments[i].name;
+    const photoCommentText = chunk.querySelector('.social__comment p');
+    photoCommentText.textContent = photo.comments[i].message;
+    fragment.appendChild(chunk);
+    photoCommentsItemCounter.textContent = `${Math.min(NEXT_COMMENTS_COUNT * (commentsPage + 1), photo.comments.length)  } из ${  photo.comments.length  } комментариев`;
+  }
+  commentsContainer.appendChild(fragment);
+
+  if (photo.comments.length === (commentsPage + 1) * NEXT_COMMENTS_COUNT || photo.comments.length < (commentsPage + 1) * NEXT_COMMENTS_COUNT) {
+    socialCommentsBtn.classList.add('hidden');
+  }
+  else {
+    socialCommentsBtn.classList.remove('hidden');
+  }
+};
+
+const showBigPhoto = (evt) => {
   if (evt.target.matches('img')){
     const photos = getPhotos();
     photoBig.classList.remove('hidden');
@@ -67,32 +90,9 @@ function showBigPhoto (evt) {
     // После открытия окна добавьте тегу <body> класс modal-open, чтобы контейнер с фотографиями позади не прокручивался при скролле. При закрытии окна не забудьте удалить этот класс.
     document.body.classList.add('modal-open');
   }
-}
+};
 
 pictureList.addEventListener('click', showBigPhoto);
-
-// В модуле, который отвечает за отрисовку окна с полноразмерным изображением, доработайте код по выводу списка комментариев таким образом, чтобы список показывался не полностью, а по 5 элементов, и следующие 5 элементов добавлялись бы по нажатию на кнопку «Загрузить ещё». Не забудьте реализовать обновление числа показанных комментариев в блоке .social__comment-count.
-
-function setComments (photo, commentsPage) {
-  for (let i = commentsPage * NEXT_COMMENTS_COUNT; i < Math.min(NEXT_COMMENTS_COUNT * (commentsPage + 1), photo.comments.length); i++){
-    const chunk = photoCommentsItem.cloneNode(true);
-    const photoComment = chunk.querySelector('.social__comment img');
-    photoComment.src = photo.comments[i].avatar;
-    photoComment.alt = photo.comments[i].name;
-    const photoCommentText = chunk.querySelector('.social__comment p');
-    photoCommentText.textContent = photo.comments[i].message;
-    fragment.appendChild(chunk);
-    photoCommentsItemCounter.innerHTML = `${Math.min(NEXT_COMMENTS_COUNT * (commentsPage + 1), photo.comments.length)  } из ${  photo.comments.length  } комментариев`;
-  }
-  commentsContainer.appendChild(fragment);
-
-  if (photo.comments.length === (commentsPage + 1) * NEXT_COMMENTS_COUNT || photo.comments.length < (commentsPage + 1) * NEXT_COMMENTS_COUNT) {
-    socialCommentsBtn.classList.add('hidden');
-  }
-  else {
-    socialCommentsBtn.classList.remove('hidden');
-  }
-}
 
 photoCommentsLoader.addEventListener ('click', () => {
   index++;

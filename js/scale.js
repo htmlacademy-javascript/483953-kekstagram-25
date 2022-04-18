@@ -18,14 +18,14 @@ const photo = document.querySelector('.img-upload__preview img');
 
 let currentStep = 100;
 
-function setupPhoto () {
+const setupPhoto = () => {
   scaleInput.value = `${currentStep}%`;
   photo.style = `transform: scale(${currentStep * 0.01})`;
-}
+};
 
-function resetPhotoStyle () {
+const resetPhotoStyle = () => {
   currentStep = SCALE_MAX;
-}
+};
 
 scaleBigger.addEventListener('click', () => {
   if (currentStep < SCALE_MAX) {
