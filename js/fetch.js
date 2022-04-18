@@ -1,40 +1,33 @@
 // Доработайте модуль для отрисовки фотографий так, чтобы в качестве данных использовались не случайно сгенерированные объекты, а те данные, которые вы загрузите с удалённого сервера.
 
-import {renderPhotos} from './minis.js';
+// import {renderPhotos} from './minis.js';
 import {showAlert} from './util.js';
 
 const GET_URL = 'https://25.javascript.pages.academy/kekstagram/data';
 const POST_URL = 'https://25.javascript.pages.academy/kekstagram';
 
-function convertToJSON (response) {
-  return response.json();
-}
+const convertToJSON = (response) => response.json();
 
-function checkResponse (response) {
-  if (!response.ok) {
-    showAlert('Не удалось загрузить фотографии. Попробуйте ещё раз');
+const checkResponse = (response) => {
+  if (response.ok) {
+    return convertToJSON(response);
   }
-  return response;
-}
+  else {
+    showAlert('Не удалось загрузить фотографии. Попробуйте ещё раз');
+    return false;
+  }
+};
 
-async function getData () {
+const getData = async () => {
   const photos = await fetch(GET_URL)
     .then(checkResponse)
     .catch(() => {
       showAlert('Что-то пошло не так');
     });
-  return await convertToJSON(photos);
-}
+  return photos;
+};
 
-fetch(GET_URL)
-  .then(checkResponse)
-  .then(convertToJSON)
-  .then(renderPhotos)
-  .catch(() => {
-    showAlert('Что-то пошло не так');
-  });
-
-function sendData (formData, onSuccess, onError) {
+const sendData = (formData, onSuccess, onError) => {
   fetch(
     POST_URL,
     {
@@ -50,7 +43,7 @@ function sendData (formData, onSuccess, onError) {
       }
     })
     .catch(onError);
-}
+};
 
 export {getData};
 export {sendData};

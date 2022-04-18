@@ -25,19 +25,24 @@ const successMsgBtn = successMsg.querySelector('.success__button');
 const errorMsg = document.querySelector('#error').content;
 const errorMsgBtn = errorMsg.querySelector('.error__button');
 
-function closePopup() {
+const closePopup = () => {
   uploadOverlay.classList.add('hidden');
   document.body.classList.remove('modal-open');
   resetPhotoStyle();
   uploadForm.reset();
-}
+};
 
-function openForm (){
+const pristine = new Pristine(uploadForm, {
+  errorTextClass: 'text__hashtags-error',
+});
+
+const openForm = () => {
   uploadOverlay.classList.remove('hidden');
   document.body.classList.add('modal-open');
   setupPhoto();
   getDefaultEffects();
-}
+  pristine.validate();
+};
 
 upload.addEventListener('change', () => {
   openForm();
@@ -47,7 +52,7 @@ closeBtn.addEventListener('click', () => {
   closePopup();
 });
 
-upload.addEventListener('keydown', (evt) => {
+uploadForm.addEventListener('keydown', (evt) => {
   if (evt.key === 'Escape'){
     evt.preventDefault();
     closePopup();
@@ -66,7 +71,7 @@ upload.addEventListener('keydown', (evt) => {
 // хэш-теги необязательны;
 // если фокус находится в поле ввода хэш-тега, нажатие на Esc не должно приводить к закрытию формы редактирования изображения.
 
-function isHashtagOk () {
+const isHashtagOk = () => {
   const hashtags = hashtagsText.value.split(' ');
   for (let i = 0; i < hashtags.length; i++){
     if (!(hashtags[i].match(RE) || hashtags[i] === '')) {
@@ -74,29 +79,23 @@ function isHashtagOk () {
     }
   }
   return true;
-}
+};
 
-const pristine = new Pristine(uploadForm,{
-  classTo: 'img-upload__form',
-  errorTextParent: 'img-upload__text',
-  errorTextClass: 'text__hashtags-error',
-});
-
-function checkHashtagCount () {
+const checkHashtagCount = () => {
   const hashtags = hashtagsText.value.split(' ');
   return (hashtags.length < MAX_HASHTAGS_COUNT);
-}
+};
 
-function checkHashtagUnique () {
+const checkHashtagUnique = () => {
   const hashtags = hashtagsText.value.split(' ');
   const hashtagsUnique = new Set(hashtags);
   return (hashtags.length === hashtagsUnique.size);
-}
+};
 
-function checkComment() {
+const checkComment = () => {
   const commentLength = uploadForm.querySelector('.text__description').value.length;
   return (commentLength <= MAX_LENGTH);
-}
+};
 
 hashtagsText.addEventListener('keydown', (evt) => {
   if (evt.key === 'Escape'){
@@ -134,25 +133,38 @@ pristine.addValidator(
   'Максимум 140 символов'
 );
 
-function cleanFormOnSuccess () {
+const cleanFormOnSuccess = () => {
   uploadForm.reset();
-}
+};
 
-function onErrorFormSubmit () {
-  printErrorMsg();
-}
+const onSuccessEscKeydown = (evt) => {
+  if (evt.key === 'Escape'){
+    evt.preventDefault();
+    closeSuccessMsg();
+  }
+};
 
-function onSuccessFormSubmit () {
-  closeBigPhoto();
-  cleanFormOnSuccess();
-  printSuccessMsg();
-}
+const onSuccessOutClick = (evt) => {
+  const successMsgWindow = document.querySelector('.success__inner');
+  const target = evt.target;
+  const isSuccessMsgWindow = target === successMsgWindow || successMsgWindow.contains(target);
+  const isSuccessMsgBtn = target === successMsgBtn;
+  if (!isSuccessMsgWindow || isSuccessMsgBtn) {
+    closeSuccessMsg();
+  }
+};
 
-function printSuccessMsg () {
+const printSuccessMsg = () => {
   document.body.appendChild(successMsg);
   document.addEventListener('click', onSuccessOutClick);
   document.addEventListener('keydown', onSuccessEscKeydown);
-}
+};
+
+const onSuccessFormSubmit = () => {
+  closeBigPhoto();
+  cleanFormOnSuccess();
+  printSuccessMsg();
+};
 
 function closeSuccessMsg () {
   const successMsgContainer = document.querySelector('.success');
@@ -161,44 +173,7 @@ function closeSuccessMsg () {
   document.removeEventListener('keydown', onSuccessEscKeydown);
 }
 
-function onSuccessEscKeydown (evt) {
-  if (evt.key === 'Escape'){
-    evt.preventDefault();
-    closeSuccessMsg();
-  }
-}
-
-function onSuccessOutClick (evt) {
-  const successMsgWindow = document.querySelector('.success__inner');
-  const target = evt.target;
-  const isSuccessMsgWindow = target === successMsgWindow || successMsgWindow.contains(target);
-  const isSuccessMsgBtn = target === successMsgBtn;
-  if (!isSuccessMsgWindow || isSuccessMsgBtn) {
-    closeSuccessMsg();
-  }
-}
-
-function printErrorMsg () {
-  document.body.appendChild(errorMsg);
-  document.addEventListener('click', onErrorOutClick);
-  document.addEventListener('keydown', onErrorEscKeydown);
-}
-
-function closeErrorMsg () {
-  const errorMsgContainer = document.querySelector('.error');
-  document.body.removeChild(errorMsgContainer);
-  document.removeEventListener('click', onErrorOutClick);
-  document.removeEventListener('keydown', onErrorEscKeydown);
-}
-
-function onErrorEscKeydown (evt) {
-  if (evt.key === 'Escape'){
-    evt.preventDefault();
-    closeErrorMsg();
-  }
-}
-
-function onErrorOutClick (evt) {
+const onErrorOutClick = (evt) => {
   const errorMsgWindow = document.querySelector('.error__inner');
   const target = evt.target;
   const isErrorMsgWindow = target === errorMsgWindow || errorMsgWindow.contains(target);
@@ -206,6 +181,30 @@ function onErrorOutClick (evt) {
   if (!isErrorMsgWindow || isErrorMsgBtn) {
     closeErrorMsg();
   }
+};
+
+const onErrorEscKeydown = (evt) => {
+  if (evt.key === 'Escape'){
+    evt.preventDefault();
+    closeErrorMsg();
+  }
+};
+
+const printErrorMsg = () => {
+  document.body.appendChild(errorMsg);
+  document.addEventListener('click', onErrorOutClick);
+  document.addEventListener('keydown', onErrorEscKeydown);
+};
+
+const onErrorFormSubmit = () => {
+  printErrorMsg();
+};
+
+function closeErrorMsg () {
+  const errorMsgContainer = document.querySelector('.error');
+  document.body.removeChild(errorMsgContainer);
+  document.removeEventListener('click', onErrorOutClick);
+  document.removeEventListener('keydown', onErrorEscKeydown);
 }
 
 uploadForm.addEventListener('submit', (evt) => {
