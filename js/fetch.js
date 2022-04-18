@@ -1,6 +1,6 @@
 // Доработайте модуль для отрисовки фотографий так, чтобы в качестве данных использовались не случайно сгенерированные объекты, а те данные, которые вы загрузите с удалённого сервера.
 
-import {renderPhotos} from './minis.js';
+// import {renderPhotos} from './minis.js';
 import {showAlert} from './util.js';
 
 const GET_URL = 'https://25.javascript.pages.academy/kekstagram/data';
@@ -26,12 +26,6 @@ const getData = async () => {
     });
   return photos;
 };
-
-// fetch(GET_URL)
-//   .then(checkResponse)
-//   .catch(() => {
-//     showAlert('Что-то пошло не так');
-//   });
 
 const sendData = (formData, onSuccess, onError) => {
   fetch(

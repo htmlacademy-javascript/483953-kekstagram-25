@@ -32,11 +32,16 @@ const closePopup = () => {
   uploadForm.reset();
 };
 
+const pristine = new Pristine(uploadForm, {
+  errorTextClass: 'text__hashtags-error',
+});
+
 const openForm = () => {
   uploadOverlay.classList.remove('hidden');
   document.body.classList.add('modal-open');
   setupPhoto();
   getDefaultEffects();
+  pristine.validate();
 };
 
 upload.addEventListener('change', () => {
@@ -75,12 +80,6 @@ const isHashtagOk = () => {
   }
   return true;
 };
-
-const pristine = new Pristine(uploadForm,{
-  classTo: 'img-upload__form',
-  errorTextParent: 'img-upload__text',
-  errorTextClass: 'text__hashtags-error',
-});
 
 const checkHashtagCount = () => {
   const hashtags = hashtagsText.value.split(' ');
