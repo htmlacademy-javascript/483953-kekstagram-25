@@ -63,31 +63,18 @@ const setComments = (photo, commentsPage) => {
 };
 
 const onThumbnailClick = (evt) => {
-  if (evt.target.matches('img')){
+  if (evt.target.matches('.picture__img')){
     const photos = getPhotos();
     photoBig.classList.remove('hidden');
     document.addEventListener('keydown', onPopupEscKeydown);
     elem = evt.target.src.match(RE)[1] - 1;
-
-    // Адрес изображения url подставьте как src изображения внутри блока .big-picture__img.
     photoImg.src = photos[elem].url;
-
-    // Количество лайков likes подставьте как текстовое содержание элемента .likes-count.
     photoLikes.textContent = photos[elem].likes;
-
-    // Количество комментариев comments подставьте как текстовое содержание элемента .comments-count.
     photoCommentsCount.textContent = photos[elem].comments.length;
-
-    // Список комментариев под фотографией: комментарии должны вставляться в блок .social__comments. Разметка каждого комментария должна выглядеть так:
-
     commentsContainer.innerHTML = ''; // сломается, если будет 0 комментариев!
     index = 0;
     setComments(photos[elem], 0);
-
-    // Описание фотографии description вставьте строкой в блок .social__caption.
     photoDescription.textContent = photos[elem].description;
-
-    // После открытия окна добавьте тегу <body> класс modal-open, чтобы контейнер с фотографиями позади не прокручивался при скролле. При закрытии окна не забудьте удалить этот класс.
     document.body.classList.add('modal-open');
   }
 };
@@ -99,7 +86,5 @@ photoCommentsLoader.addEventListener ('click', () => {
   const photos = getPhotos();
   setComments(photos[elem], index);
 });
-
-// нужно обновлять количество показанных комментариев в блоке «5 комментариев из 17» и нужно скрывать кнопку Загрузить ещё, если больше грузить нечего
 
 export {closeBigPhoto};
