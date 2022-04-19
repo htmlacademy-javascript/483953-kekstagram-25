@@ -8,7 +8,6 @@ import {resetPhotoStyle} from './scale.js';
 import {getDefaultEffects} from './effects.js';
 import {showAlert} from './util.js';
 import {sendData} from './fetch.js';
-import {closeBigPhoto} from './zoom.js';
 
 const MAX_LENGTH = 140;
 const RE = /^#[a-zA-Zа-яА-ЯёЁ0-9]{1,19}$/;
@@ -30,11 +29,19 @@ const closePopup = () => {
   document.body.classList.remove('modal-open');
   resetPhotoStyle();
   uploadForm.reset();
+  document.removeEventListener('keydown', onPhotoUploadEscKeydown);
 };
 
 const pristine = new Pristine(uploadForm, {
   errorTextClass: 'text__hashtags-error',
 });
+
+function onPhotoUploadEscKeydown (evt) {
+  if (evt.key === 'Escape'){
+    evt.preventDefault();
+    closePopup();
+  }
+}
 
 const openForm = () => {
   uploadOverlay.classList.remove('hidden');
@@ -42,22 +49,12 @@ const openForm = () => {
   setupPhoto();
   getDefaultEffects();
   pristine.validate();
+  document.addEventListener('keydown', onPhotoUploadEscKeydown);
 };
 
-upload.addEventListener('change', () => {
-  openForm();
-});
+upload.addEventListener('change', openForm);
 
-closeBtn.addEventListener('click', () => {
-  closePopup();
-});
-
-uploadForm.addEventListener('keydown', (evt) => {
-  if (evt.key === 'Escape'){
-    evt.preventDefault();
-    closePopup();
-  }
-});
+closeBtn.addEventListener('click', closePopup);
 
 // Хэш-теги:
 // хэш-тег начинается с символа # (решётка);
@@ -161,8 +158,8 @@ const printSuccessMsg = () => {
 };
 
 const onSuccessFormSubmit = () => {
-  closeBigPhoto();
   cleanFormOnSuccess();
+  closePopup();
   printSuccessMsg();
 };
 
@@ -197,6 +194,7 @@ const printErrorMsg = () => {
 };
 
 const onErrorFormSubmit = () => {
+  closePopup();
   printErrorMsg();
 };
 
@@ -213,7 +211,6 @@ uploadForm.addEventListener('submit', (evt) => {
   if (isValid) {
     const formData = new FormData(evt.target);
     sendData(formData, onSuccessFormSubmit, onErrorFormSubmit);
-    closePopup();
   } else {
     showAlert('Форма содержит ошибки');
   }
