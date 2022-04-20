@@ -86,5 +86,3 @@ photoCommentsLoader.addEventListener ('click', () => {
   const photos = getPhotos();
   setComments(photos[elem], index);
 });
-
-export {closeBigPhoto};

@@ -8,7 +8,6 @@ import {resetPhotoStyle} from './scale.js';
 import {getDefaultEffects} from './effects.js';
 import {showAlert} from './util.js';
 import {sendData} from './fetch.js';
-import {closeBigPhoto} from './zoom.js';
 
 const MAX_LENGTH = 140;
 const RE = /^#[a-zA-Zа-яА-ЯёЁ0-9]{1,19}$/;
@@ -21,20 +20,26 @@ const uploadForm = document.querySelector('#upload-select-image');
 const hashtagsText = document.querySelector('.text__hashtags');
 const commentText = uploadForm.querySelector('.text__description');
 const successMsg = document.querySelector('#success').content;
-const successMsgBtn = successMsg.querySelector('.success__button');
 const errorMsg = document.querySelector('#error').content;
-const errorMsgBtn = errorMsg.querySelector('.error__button');
 
 const closePopup = () => {
   uploadOverlay.classList.add('hidden');
   document.body.classList.remove('modal-open');
   resetPhotoStyle();
   uploadForm.reset();
+  document.removeEventListener('keydown', onPhotoUploadEscKeydown);
 };
 
 const pristine = new Pristine(uploadForm, {
   errorTextClass: 'text__hashtags-error',
 });
+
+function onPhotoUploadEscKeydown (evt) {
+  if (evt.key === 'Escape'){
+    evt.preventDefault();
+    closePopup();
+  }
+}
 
 const openForm = () => {
   uploadOverlay.classList.remove('hidden');
@@ -42,22 +47,12 @@ const openForm = () => {
   setupPhoto();
   getDefaultEffects();
   pristine.validate();
+  document.addEventListener('keydown', onPhotoUploadEscKeydown);
 };
 
-upload.addEventListener('change', () => {
-  openForm();
-});
+upload.addEventListener('change', openForm);
 
-closeBtn.addEventListener('click', () => {
-  closePopup();
-});
-
-uploadForm.addEventListener('keydown', (evt) => {
-  if (evt.key === 'Escape'){
-    evt.preventDefault();
-    closePopup();
-  }
-});
+closeBtn.addEventListener('click', closePopup);
 
 // Хэш-теги:
 // хэш-тег начинается с символа # (решётка);
@@ -146,6 +141,7 @@ const onSuccessEscKeydown = (evt) => {
 
 const onSuccessOutClick = (evt) => {
   const successMsgWindow = document.querySelector('.success__inner');
+  const successMsgBtn = document.querySelector('.success__button');
   const target = evt.target;
   const isSuccessMsgWindow = target === successMsgWindow || successMsgWindow.contains(target);
   const isSuccessMsgBtn = target === successMsgBtn;
@@ -155,14 +151,15 @@ const onSuccessOutClick = (evt) => {
 };
 
 const printSuccessMsg = () => {
-  document.body.appendChild(successMsg);
+  const successMsgElement = successMsg.cloneNode(true);
+  document.body.appendChild(successMsgElement);
   document.addEventListener('click', onSuccessOutClick);
   document.addEventListener('keydown', onSuccessEscKeydown);
 };
 
 const onSuccessFormSubmit = () => {
-  closeBigPhoto();
   cleanFormOnSuccess();
+  closePopup();
   printSuccessMsg();
 };
 
@@ -175,6 +172,7 @@ function closeSuccessMsg () {
 
 const onErrorOutClick = (evt) => {
   const errorMsgWindow = document.querySelector('.error__inner');
+  const errorMsgBtn = document.querySelector('.error__button');
   const target = evt.target;
   const isErrorMsgWindow = target === errorMsgWindow || errorMsgWindow.contains(target);
   const isErrorMsgBtn = target === errorMsgBtn;
@@ -191,12 +189,14 @@ const onErrorEscKeydown = (evt) => {
 };
 
 const printErrorMsg = () => {
-  document.body.appendChild(errorMsg);
+  const errorMsgElement = errorMsg.cloneNode(true);
+  document.body.appendChild(errorMsgElement);
   document.addEventListener('click', onErrorOutClick);
   document.addEventListener('keydown', onErrorEscKeydown);
 };
 
 const onErrorFormSubmit = () => {
+  closePopup();
   printErrorMsg();
 };
 
@@ -213,7 +213,6 @@ uploadForm.addEventListener('submit', (evt) => {
   if (isValid) {
     const formData = new FormData(evt.target);
     sendData(formData, onSuccessFormSubmit, onErrorFormSubmit);
-    closePopup();
   } else {
     showAlert('Форма содержит ошибки');
   }
