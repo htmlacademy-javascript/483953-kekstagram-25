@@ -20,9 +20,7 @@ const uploadForm = document.querySelector('#upload-select-image');
 const hashtagsText = document.querySelector('.text__hashtags');
 const commentText = uploadForm.querySelector('.text__description');
 const successMsg = document.querySelector('#success').content;
-const successMsgBtn = successMsg.querySelector('.success__button');
 const errorMsg = document.querySelector('#error').content;
-const errorMsgBtn = errorMsg.querySelector('.error__button');
 
 const closePopup = () => {
   uploadOverlay.classList.add('hidden');
@@ -143,6 +141,7 @@ const onSuccessEscKeydown = (evt) => {
 
 const onSuccessOutClick = (evt) => {
   const successMsgWindow = document.querySelector('.success__inner');
+  const successMsgBtn = document.querySelector('.success__button');
   const target = evt.target;
   const isSuccessMsgWindow = target === successMsgWindow || successMsgWindow.contains(target);
   const isSuccessMsgBtn = target === successMsgBtn;
@@ -152,7 +151,8 @@ const onSuccessOutClick = (evt) => {
 };
 
 const printSuccessMsg = () => {
-  document.body.appendChild(successMsg);
+  const successMsgElement = successMsg.cloneNode(true);
+  document.body.appendChild(successMsgElement);
   document.addEventListener('click', onSuccessOutClick);
   document.addEventListener('keydown', onSuccessEscKeydown);
 };
@@ -172,6 +172,7 @@ function closeSuccessMsg () {
 
 const onErrorOutClick = (evt) => {
   const errorMsgWindow = document.querySelector('.error__inner');
+  const errorMsgBtn = document.querySelector('.error__button');
   const target = evt.target;
   const isErrorMsgWindow = target === errorMsgWindow || errorMsgWindow.contains(target);
   const isErrorMsgBtn = target === errorMsgBtn;
@@ -188,7 +189,8 @@ const onErrorEscKeydown = (evt) => {
 };
 
 const printErrorMsg = () => {
-  document.body.appendChild(errorMsg);
+  const errorMsgElement = errorMsg.cloneNode(true);
+  document.body.appendChild(errorMsgElement);
   document.addEventListener('click', onErrorOutClick);
   document.addEventListener('keydown', onErrorEscKeydown);
 };
